@@ -1,0 +1,19 @@
+.field {
+    width: 640px;
+    height: 640px;
+
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 1px;
+}
+
+.square {
+}
+
+.dark {
+    background-color: beige;
+}
+
+.light {
+    background-color: #282c34;
+}
