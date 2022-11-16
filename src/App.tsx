@@ -3,12 +3,16 @@ import './App.css';
 
 import Board from "./components/Board";
 import PieceContainer from "./components/PieceContainer";
+import FieldContainer from "./components/FieldContainer";
 
 function App() {
     return (
         <div className="App">
-            <Board/>
-            <PieceContainer/>
+            <h1>Chess, but...</h1>
+            <FieldContainer>
+                <Board/>
+                <PieceContainer/>
+            </FieldContainer>
         </div>
     );
 }

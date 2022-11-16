@@ -9,3 +9,8 @@
     grid-template-rows: repeat(8, 1fr);
     gap: 1px;
 }
+
+.fieldContainer {
+    display: flex;
+    justify-content: center;
+}
