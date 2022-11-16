@@ -1,5 +1,6 @@
-import styles from "../style/field.module.css"
+import styles from "../style/board.module.css"
 import {Color, Square} from "./Square";
+import Field from "./Field";
 
 function isLightSquare(i: number) {
     const column = i % 8;
@@ -9,11 +10,11 @@ function isLightSquare(i: number) {
 
 function Board() {
     return (
-        <div className={`${styles.field}`}>
+        <Field>
             {Array(64).fill(0).map((_, i) =>
-                <Square color={isLightSquare(i) ? Color.Light : Color.Dark}/>)
+                <Square key={i} color={isLightSquare(i) ? Color.Light : Color.Dark}/>)
             }
-        </div>
+        </Field>
     );
 }
 

@@ -1,4 +1,4 @@
-import styles from "../style/field.module.css"
+import styles from "../style/board.module.css"
 
 export enum Color {
     Dark,

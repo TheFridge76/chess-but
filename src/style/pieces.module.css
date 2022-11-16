@@ -1,0 +1,57 @@
+.pieceContainer {
+}
+
+.piece {
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+/* White */
+.white.pawn {
+    background-image: url("https://raw.githubusercontent.com/lichess-org/lila/master/public/piece/anarcandy/wP.svg");
+}
+
+.white.rook {
+    background-image: url("https://raw.githubusercontent.com/lichess-org/lila/master/public/piece/anarcandy/wR.svg");
+}
+
+.white.horsey {
+    background-image: url("https://raw.githubusercontent.com/lichess-org/lila/master/public/piece/anarcandy/wK.svg");
+}
+
+.white.bishop {
+    background-image: url("https://raw.githubusercontent.com/lichess-org/lila/master/public/piece/anarcandy/wB.svg");
+}
+
+.white.queen {
+    background-image: url("https://raw.githubusercontent.com/lichess-org/lila/master/public/piece/anarcandy/wQ.svg");
+}
+
+.white.king {
+    background-image: url("https://raw.githubusercontent.com/lichess-org/lila/master/public/piece/anarcandy/wK.svg");
+}
+
+/* Black */
+.black.pawn {
+    background-image: url("https://raw.githubusercontent.com/lichess-org/lila/master/public/piece/anarcandy/bP.svg");
+}
+
+.black.rook {
+    background-image: url("https://raw.githubusercontent.com/lichess-org/lila/master/public/piece/anarcandy/bR.svg");
+}
+
+.black.horsey {
+    background-image: url("https://raw.githubusercontent.com/lichess-org/lila/master/public/piece/anarcandy/bK.svg");
+}
+
+.black.bishop {
+    background-image: url("https://raw.githubusercontent.com/lichess-org/lila/master/public/piece/anarcandy/bB.svg");
+}
+
+.black.queen {
+    background-image: url("https://raw.githubusercontent.com/lichess-org/lila/master/public/piece/anarcandy/bQ.svg");
+}
+
+.black.king {
+    background-image: url("https://raw.githubusercontent.com/lichess-org/lila/master/public/piece/anarcandy/bK.svg");
+}
