@@ -1,7 +1,8 @@
 import styles from "../style/pieces.module.css"
 import React, {useCallback, useEffect, useMemo, useState} from "react";
+import {MoveValidator} from "../rules/Types";
 
-type PieceType = "pawn" | "rook" | "horsey" | "bishop" | "queen" | "king";
+export type PieceType = "pawn" | "rook" | "horsey" | "bishop" | "queen" | "king";
 type Color = "black" | "white";
 
 type PieceProps = {
@@ -9,6 +10,8 @@ type PieceProps = {
     color: Color,
     row: number,
     col: number,
+    validatorsPos: MoveValidator[],
+    validatorsNeg: MoveValidator[],
 };
 
 export function Piece(props: PieceProps) {
@@ -19,8 +22,10 @@ export function Piece(props: PieceProps) {
     const [dragY, setDragY] = useState(0);
     const offsetX = useMemo(() => dragX - dragStartX, [dragX, dragStartX]);
     const offsetY = useMemo(() => dragY - dragStartY, [dragY, dragStartY]);
-    const [row, setRow] = useState(props.row);
-    const [col, setCol] = useState(props.col);
+    const [square, setSquare] = useState({
+        row: props.row,
+        col: props.col,
+    });
 
     function drag(e: React.MouseEvent) {
         setDragging(true);
@@ -37,9 +42,28 @@ export function Piece(props: PieceProps) {
 
     const drop = useCallback(() => {
         setDragging(false);
-        setRow(row => row + Math.round(offsetY / 81));
-        setCol(col => col + Math.round(offsetX / 81));
+        setSquare((from) => {
+            const to = {
+                row: from.row + Math.round(offsetY / 81),
+                col: from.col + Math.round(offsetX / 81),
+            };
+            let move = false;
+            for (const validator of props.validatorsPos) {
+                if (validator(from, to, {})) {
+                    move = true;
+                    break;
+                }
+            }
+            for (const validator of props.validatorsNeg) {
+                if (validator(from, to, {})) {
+                    move = false;
+                    break;
+                }
+            }
+            return move ? to : from;
+        });
     }, [offsetY, offsetX]);
+    //TODO Maybe use reducer?
 
     useEffect(() => {
         if (dragging) {
@@ -62,8 +86,8 @@ export function Piece(props: PieceProps) {
     const style= {
         top: offsetY,
         left: offsetX,
-        gridRow: row,
-        gridColumn: col,
+        gridRow: square.row,
+        gridColumn: square.col,
     };
 
     return (

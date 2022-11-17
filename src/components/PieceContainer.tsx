@@ -1,44 +1,65 @@
-import {Piece} from "./Piece";
+import {Piece, PieceType} from "./Piece";
 import Field from "./Field";
+import {bishop, king, negate, onField, queen, rook} from "../rules/std";
+import {MoveValidator} from "../rules/Types";
 
 function Board() {
+    const backRow: PieceType[] = ["rook", "horsey", "bishop", "queen", "king", "bishop", "horsey", "rook"];
+    const frontRow: PieceType[] = ["pawn", "pawn", "pawn", "pawn", "pawn", "pawn", "pawn", "pawn"];
+
+    function getValidatorsPos(piece: PieceType) {
+        const validatorsPos: MoveValidator[] = [];
+        switch(piece) {
+            case "horsey":
+                break;
+            case "bishop":
+                validatorsPos.push(bishop);
+                break;
+            case "king":
+                validatorsPos.push(king);
+                break;
+            case "pawn":
+                break;
+            case "queen":
+                validatorsPos.push(queen);
+                break;
+            case "rook":
+                validatorsPos.push(rook);
+                break;
+        }
+        return validatorsPos;
+    }
+
     return (
         <Field>
-            <Piece row={8} col={1} color="black" pieceType="rook"/>
-            <Piece row={8} col={2} color="black" pieceType="horsey"/>
-            <Piece row={8} col={3} color="black" pieceType="bishop"/>
-            <Piece row={8} col={4} color="black" pieceType="queen"/>
-            <Piece row={8} col={5} color="black" pieceType="king"/>
-            <Piece row={8} col={6} color="black" pieceType="bishop"/>
-            <Piece row={8} col={7} color="black" pieceType="horsey"/>
-            <Piece row={8} col={8} color="black" pieceType="rook"/>
-
-            <Piece row={7} col={1} color="black" pieceType="pawn"/>
-            <Piece row={7} col={2} color="black" pieceType="pawn"/>
-            <Piece row={7} col={3} color="black" pieceType="pawn"/>
-            <Piece row={7} col={4} color="black" pieceType="pawn"/>
-            <Piece row={7} col={5} color="black" pieceType="pawn"/>
-            <Piece row={7} col={6} color="black" pieceType="pawn"/>
-            <Piece row={7} col={7} color="black" pieceType="pawn"/>
-            <Piece row={7} col={8} color="black" pieceType="pawn"/>
-
-            <Piece row={2} col={1} color="white" pieceType="pawn"/>
-            <Piece row={2} col={2} color="white" pieceType="pawn"/>
-            <Piece row={2} col={3} color="white" pieceType="pawn"/>
-            <Piece row={2} col={4} color="white" pieceType="pawn"/>
-            <Piece row={2} col={5} color="white" pieceType="pawn"/>
-            <Piece row={2} col={6} color="white" pieceType="pawn"/>
-            <Piece row={2} col={7} color="white" pieceType="pawn"/>
-            <Piece row={2} col={8} color="white" pieceType="pawn"/>
-
-            <Piece row={1} col={1} color="white" pieceType="rook"/>
-            <Piece row={1} col={2} color="white" pieceType="horsey"/>
-            <Piece row={1} col={3} color="white" pieceType="bishop"/>
-            <Piece row={1} col={4} color="white" pieceType="queen"/>
-            <Piece row={1} col={5} color="white" pieceType="king"/>
-            <Piece row={1} col={6} color="white" pieceType="bishop"/>
-            <Piece row={1} col={7} color="white" pieceType="horsey"/>
-            <Piece row={1} col={8} color="white" pieceType="rook"/>
+            {backRow.map((piece, index) => {
+                const validatorsPos = getValidatorsPos(piece);
+                return <Piece key={index} row={1} col={index + 1} color="white" pieceType={piece}
+                       validatorsPos={validatorsPos}
+                       validatorsNeg={[negate(onField)]}
+                />;
+            })}
+            {frontRow.map((piece, index) => {
+                const validatorsPos = getValidatorsPos(piece);
+                return <Piece key={index} row={2} col={index + 1} color="white" pieceType={piece}
+                              validatorsPos={validatorsPos}
+                              validatorsNeg={[negate(onField)]}
+                />;
+            })}
+            {backRow.map((piece, index) => {
+                const validatorsPos = getValidatorsPos(piece);
+                return <Piece key={index} row={8} col={index + 1} color="black" pieceType={piece}
+                              validatorsPos={validatorsPos}
+                              validatorsNeg={[negate(onField)]}
+                />;
+            })}
+            {frontRow.map((piece, index) => {
+                const validatorsPos = getValidatorsPos(piece);
+                return <Piece key={index} row={7} col={index + 1} color="black" pieceType={piece}
+                              validatorsPos={validatorsPos}
+                              validatorsNeg={[negate(onField)]}
+                />;
+            })}
         </Field>
     );
 }
