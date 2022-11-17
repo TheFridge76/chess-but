@@ -21,7 +21,6 @@ export function Square(props: SquareProps) {
     }
 
     return (
-        <div className={`${styles.square} ${colorClass}`}>
-        </div>
+        <div className={`${styles.square} ${colorClass}`}/>
     );
 }

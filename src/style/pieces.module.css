@@ -6,6 +6,10 @@
     background-repeat: no-repeat;
 }
 
+.piece.dragging {
+    position: relative;
+}
+
 /* White */
 .white.pawn {
     background-image: url("https://raw.githubusercontent.com/lichess-org/lila/master/public/piece/anarcandy/wP.svg");
@@ -16,7 +20,7 @@
 }
 
 .white.horsey {
-    background-image: url("https://raw.githubusercontent.com/lichess-org/lila/master/public/piece/anarcandy/wK.svg");
+    background-image: url("https://raw.githubusercontent.com/lichess-org/lila/master/public/piece/anarcandy/wN.svg");
 }
 
 .white.bishop {
@@ -41,7 +45,7 @@
 }
 
 .black.horsey {
-    background-image: url("https://raw.githubusercontent.com/lichess-org/lila/master/public/piece/anarcandy/bK.svg");
+    background-image: url("https://raw.githubusercontent.com/lichess-org/lila/master/public/piece/anarcandy/bN.svg");
 }
 
 .black.bishop {
