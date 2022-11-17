@@ -1,5 +1,5 @@
 import styles from "../style/pieces.module.css"
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 
 type PieceType = "pawn" | "rook" | "horsey" | "bishop" | "queen" | "king";
 type Color = "black" | "white";
@@ -17,13 +17,10 @@ export function Piece(props: PieceProps) {
     const [dragStartY, setDragStartY] = useState(0);
     const [dragX, setDragX] = useState(0);
     const [dragY, setDragY] = useState(0);
+    const offsetX = useMemo(() => dragX - dragStartX, [dragX, dragStartX]);
+    const offsetY = useMemo(() => dragY - dragStartY, [dragY, dragStartY]);
     const [row, setRow] = useState(props.row);
     const [col, setCol] = useState(props.col);
-
-    function move(e: MouseEvent) {
-        setDragX(e.clientX);
-        setDragY(e.clientY);
-    }
 
     function drag(e: React.MouseEvent) {
         setDragging(true);
@@ -33,27 +30,38 @@ export function Piece(props: PieceProps) {
         setDragY(e.clientY);
     }
 
-    function drop() {
-        setDragging(false);
+    function move(e: MouseEvent) {
+        setDragX(e.clientX);
+        setDragY(e.clientY);
     }
+
+    const drop = useCallback(() => {
+        setDragging(false);
+        setRow(row => row + Math.round(offsetY / 81));
+        setCol(col => col + Math.round(offsetX / 81));
+    }, [offsetY, offsetX]);
 
     useEffect(() => {
         if (dragging) {
             window.addEventListener("mousemove", move);
-            window.addEventListener("mouseup", drop);
             return () => {
                 window.removeEventListener("mousemove", move);
-                window.removeEventListener("mouseup", drop);
             };
-        } else {
-            setRow(row => row + Math.round((dragY - dragStartY) / 81));
-            setCol(col => col + Math.round((dragX - dragStartX) / 81));
         }
     }, [dragging]);
 
+    useEffect(() => {
+        if (dragging) {
+            window.addEventListener("mouseup", drop);
+            return () => {
+                window.removeEventListener("mouseup", drop);
+            };
+        }
+    }, [dragging, drop]);
+
     const style= {
-        left: dragX - dragStartX,
-        top: dragY - dragStartY,
+        top: offsetY,
+        left: offsetX,
         gridRow: row,
         gridColumn: col,
     };
