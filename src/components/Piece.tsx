@@ -26,7 +26,7 @@ export function Piece(props: PieceProps) {
         col: props.col,
     });
 
-    function drag(e: React.MouseEvent) {
+    function drag(e: React.MouseEvent | React.Touch) {
         setDragging(true);
         setDragStartX(e.clientX);
         setDragStartY(e.clientY);
@@ -34,9 +34,21 @@ export function Piece(props: PieceProps) {
         setDragY(e.clientY);
     }
 
-    function move(e: MouseEvent) {
+    function dragTouch(e: React.TouchEvent) {
+        if (e.touches.length === 1) {
+            drag(e.touches[0]);
+        }
+    }
+
+    function move(e: MouseEvent | Touch) {
         setDragX(e.clientX);
         setDragY(e.clientY);
+    }
+
+    function moveTouch(e: TouchEvent) {
+        if (e.touches.length === 1) {
+            move(e.touches[0]);
+        }
     }
 
     const drop = useCallback(() => {
@@ -67,8 +79,10 @@ export function Piece(props: PieceProps) {
     useEffect(() => {
         if (dragging) {
             window.addEventListener("mousemove", move);
+            window.addEventListener("touchmove", moveTouch);
             return () => {
                 window.removeEventListener("mousemove", move);
+                window.removeEventListener("touchmove", moveTouch);
             };
         }
     }, [dragging]);
@@ -76,8 +90,10 @@ export function Piece(props: PieceProps) {
     useEffect(() => {
         if (dragging) {
             window.addEventListener("mouseup", drop);
+            window.addEventListener("touchend", drop);
             return () => {
                 window.removeEventListener("mouseup", drop);
+                window.removeEventListener("touchend", drop);
             };
         }
     }, [dragging, drop]);
@@ -93,6 +109,7 @@ export function Piece(props: PieceProps) {
         <div
             className={`${styles.piece} ${styles[props.pieceType]} ${styles[props.color]} ${dragging ? styles.dragging : ""}`}
             onMouseDown={drag}
+            onTouchStart={dragTouch}
             style={style}
         />
     );
