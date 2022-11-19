@@ -40,17 +40,6 @@ export function Piece(props: PieceProps) {
         }
     }
 
-    function move(e: MouseEvent | Touch) {
-        setDragX(e.clientX);
-        setDragY(e.clientY);
-    }
-
-    function moveTouch(e: TouchEvent) {
-        if (e.touches.length === 1) {
-            move(e.touches[0]);
-        }
-    }
-
     const drop = useCallback(() => {
         setDragging(false);
         setSquare((from) => {
@@ -77,6 +66,17 @@ export function Piece(props: PieceProps) {
     //TODO Maybe use reducer?
 
     useEffect(() => {
+        function move(e: MouseEvent | Touch) {
+            setDragX(e.clientX);
+            setDragY(e.clientY);
+        }
+
+        function moveTouch(e: TouchEvent) {
+            if (e.touches.length === 1) {
+                move(e.touches[0]);
+            }
+        }
+
         if (dragging) {
             window.addEventListener("mousemove", move);
             window.addEventListener("touchmove", moveTouch);
