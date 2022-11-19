@@ -1,7 +1,8 @@
 import {Piece, PieceType} from "./Piece";
 import Field from "./Field";
-import {bishop, king, negate, onField, queen, rook} from "../rules/std";
+import {bishop, king, queen, rook} from "../rules/std";
 import {MoveValidator} from "../rules/Types";
+import {negate, onField} from "../rules/util";
 
 function Board() {
     const backRow: PieceType[] = ["rook", "horsey", "bishop", "queen", "king", "bishop", "horsey", "rook"];
