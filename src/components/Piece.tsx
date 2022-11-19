@@ -61,7 +61,7 @@ export function Piece(props: PieceProps) {
             }
             return move ? to : from;
         });
-    }, [offsetY, offsetX]);
+    }, [offsetY, offsetX, props.color, props.validatorsNeg, props.validatorsPos]);
     //TODO Maybe use reducer?
 
     useEffect(() => {

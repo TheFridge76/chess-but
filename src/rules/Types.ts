@@ -3,11 +3,11 @@ export type Square = {
     col: number,
 }
 
-enum ResultType {
+/*enum ResultType {
     Move,
     Capture,
     EndTurn,
-}
+}*/
 
 export enum Side {
     White = "white",
