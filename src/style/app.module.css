@@ -1,3 +1,10 @@
 .butText {
     color: coral;
 }
+
+.footer {
+    color: #282c34;
+    font-size: small;
+
+    margin-top: 5%;
+}

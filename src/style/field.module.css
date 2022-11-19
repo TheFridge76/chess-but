@@ -11,6 +11,9 @@
 }
 
 .fieldContainer {
+    width: 100%;
+    height: 640px;
+
     display: flex;
     justify-content: center;
 }

@@ -19,6 +19,14 @@ function App() {
                 <Board/>
                 <PieceContainer/>
             </FieldContainer>
+            <div className={styles.footer}>
+                <hr/>
+                <p>
+                    Piece design <a href="https://github.com/lichess-org/lila/tree/master/public/piece/anarcandy">"Anarcandy"</a> from Lichess,
+                    designed by <a href="https://github.com/caderek">caderek</a>.
+                    Licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>.
+                </p>
+            </div>
         </div>
     );
 }

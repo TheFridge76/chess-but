@@ -1,4 +1,3 @@
-import styles from "../style/board.module.css"
 import {Color, Square} from "./Square";
 import Field from "./Field";
 
