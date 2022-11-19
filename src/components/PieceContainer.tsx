@@ -1,6 +1,6 @@
 import {Piece, PieceType} from "./Piece";
 import Field from "./Field";
-import {bishop, king, queen, rook} from "../rules/std";
+import {bishop, howDoesItMove, king, pawn, queen, rook} from "../rules/std";
 import {MoveValidator, Side} from "../rules/Types";
 import {negate, onField} from "../rules/util";
 
@@ -12,6 +12,7 @@ function Board() {
         const validatorsPos: MoveValidator[] = [];
         switch(piece) {
             case "horsey":
+                validatorsPos.push(howDoesItMove);
                 break;
             case "bishop":
                 validatorsPos.push(bishop);
@@ -20,6 +21,7 @@ function Board() {
                 validatorsPos.push(king);
                 break;
             case "pawn":
+                validatorsPos.push(pawn);
                 break;
             case "queen":
                 validatorsPos.push(queen);
