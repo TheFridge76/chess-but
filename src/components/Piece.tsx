@@ -1,13 +1,12 @@
 import styles from "../style/pieces.module.css"
 import React, {useCallback, useEffect, useMemo, useState} from "react";
-import {MoveValidator} from "../rules/Types";
+import {MoveValidator, Side} from "../rules/Types";
 
 export type PieceType = "pawn" | "rook" | "horsey" | "bishop" | "queen" | "king";
-type Color = "black" | "white";
 
 type PieceProps = {
     pieceType: PieceType,
-    color: Color,
+    color: Side,
     row: number,
     col: number,
     validatorsPos: MoveValidator[],
@@ -49,13 +48,13 @@ export function Piece(props: PieceProps) {
             };
             let move = false;
             for (const validator of props.validatorsPos) {
-                if (validator(from, to, {})) {
+                if (validator(from, to, {activeSide: props.color})) {
                     move = true;
                     break;
                 }
             }
             for (const validator of props.validatorsNeg) {
-                if (validator(from, to, {})) {
+                if (validator(from, to, {activeSide: props.color})) {
                     move = false;
                     break;
                 }

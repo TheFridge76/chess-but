@@ -1,7 +1,7 @@
 import {Piece, PieceType} from "./Piece";
 import Field from "./Field";
 import {bishop, king, queen, rook} from "../rules/std";
-import {MoveValidator} from "../rules/Types";
+import {MoveValidator, Side} from "../rules/Types";
 import {negate, onField} from "../rules/util";
 
 function Board() {
@@ -35,28 +35,28 @@ function Board() {
         <Field>
             {backRow.map((piece, index) => {
                 const validatorsPos = getValidatorsPos(piece);
-                return <Piece key={index} row={1} col={index + 1} color="white" pieceType={piece}
+                return <Piece key={index} row={1} col={index + 1} color={Side.White} pieceType={piece}
                        validatorsPos={validatorsPos}
                        validatorsNeg={[negate(onField)]}
                 />;
             })}
             {frontRow.map((piece, index) => {
                 const validatorsPos = getValidatorsPos(piece);
-                return <Piece key={index} row={2} col={index + 1} color="white" pieceType={piece}
+                return <Piece key={index} row={2} col={index + 1} color={Side.White} pieceType={piece}
                               validatorsPos={validatorsPos}
                               validatorsNeg={[negate(onField)]}
                 />;
             })}
             {backRow.map((piece, index) => {
                 const validatorsPos = getValidatorsPos(piece);
-                return <Piece key={index} row={8} col={index + 1} color="black" pieceType={piece}
+                return <Piece key={index} row={8} col={index + 1} color={Side.Black} pieceType={piece}
                               validatorsPos={validatorsPos}
                               validatorsNeg={[negate(onField)]}
                 />;
             })}
             {frontRow.map((piece, index) => {
                 const validatorsPos = getValidatorsPos(piece);
-                return <Piece key={index} row={7} col={index + 1} color="black" pieceType={piece}
+                return <Piece key={index} row={7} col={index + 1} color={Side.Black} pieceType={piece}
                               validatorsPos={validatorsPos}
                               validatorsNeg={[negate(onField)]}
                 />;
