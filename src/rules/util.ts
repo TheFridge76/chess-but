@@ -13,9 +13,9 @@ export function negate(validator: MoveValidator) {
     };
 }
 
-export const always: MoveValidator = (from, to, state) => {
+export const always: MoveValidator = (_from, _to, _state) => {
     return true;
 }
-export const onField: MoveValidator = (from, to, state) => {
+export const onField: MoveValidator = (from, to, _state) => {
     return (to.row >= 1 && to.row <= 8 && to.col >= 1 && to.col <= 8);
 }
