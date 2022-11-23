@@ -1,9 +1,10 @@
 import styles from "../style/pieces.module.css"
 import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
-import {PieceState} from "../rules/Types";
+import {PieceState, StateUpdater} from "../rules/Types";
 import {StateContext} from "./Game";
 
 type PieceProps = {
+    updateState: StateUpdater,
 };
 
 export function Piece(props: PieceProps & PieceState) {
@@ -57,7 +58,7 @@ export function Piece(props: PieceProps & PieceState) {
             }
             return move ? to : from;
         });
-    }, [offsetY, offsetX, state, props.validatorsNeg, props.validatorsPos]);
+    }, [offsetY, offsetX, state, props]);
     //TODO Maybe use reducer?
 
     useEffect(() => {

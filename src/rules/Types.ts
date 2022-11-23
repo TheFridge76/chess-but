@@ -32,3 +32,5 @@ export type GameState = {
 
 //TODO Include actual result in return value
 export type MoveValidator = (from: Square, to: Square, state: GameState) => boolean;
+
+export type StateUpdater = () => void;
