@@ -14,8 +14,20 @@ export enum Side {
     Black = "black",
 }
 
+export type PieceType = "pawn" | "rook" | "horsey" | "bishop" | "queen" | "king";
+
+export type PieceState = {
+    pieceType: PieceType,
+    color: Side,
+    row: number,
+    col: number,
+    validatorsPos: MoveValidator[],
+    validatorsNeg: MoveValidator[],
+};
+
 export type GameState = {
     activeSide: Side,
+    pieces: PieceState[],
 }
 
 //TODO Include actual result in return value

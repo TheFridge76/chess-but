@@ -2,10 +2,7 @@ import React from 'react';
 import './App.css';
 import styles from "./style/app.module.css"
 
-
-import Board from "./components/Board";
-import PieceContainer from "./components/PieceContainer";
-import FieldContainer from "./components/FieldContainer";
+import Game from "./components/Game";
 
 function App() {
     return (
@@ -15,10 +12,7 @@ function App() {
                 You can move pieces around according to the most basic rules, but that's it.
                 No capturing, no checking, no castling and worst of all: no en passanting.
             </p>
-            <FieldContainer>
-                <Board/>
-                <PieceContainer/>
-            </FieldContainer>
+            <Game/>
             <div className={styles.footer}>
                 <hr/>
                 <p>

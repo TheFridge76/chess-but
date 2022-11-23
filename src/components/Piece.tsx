@@ -1,8 +1,7 @@
 import styles from "../style/pieces.module.css"
-import React, {useCallback, useEffect, useMemo, useState} from "react";
-import {MoveValidator, Side} from "../rules/Types";
-
-export type PieceType = "pawn" | "rook" | "horsey" | "bishop" | "queen" | "king";
+import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
+import {MoveValidator, PieceType, Side} from "../rules/Types";
+import {StateContext} from "./Game";
 
 type PieceProps = {
     pieceType: PieceType,
@@ -13,6 +12,7 @@ type PieceProps = {
     validatorsNeg: MoveValidator[],
 };
 
+//TODO Use PieceProps & PieceState as type of props
 export function Piece(props: PieceProps) {
     const [dragging, setDragging] = useState(false);
     const [dragStartX, setDragStartX] = useState(0);
@@ -25,6 +25,8 @@ export function Piece(props: PieceProps) {
         row: props.row,
         col: props.col,
     });
+
+    const state = useContext(StateContext);
 
     function drag(e: React.MouseEvent | React.Touch) {
         setDragging(true);
@@ -49,20 +51,20 @@ export function Piece(props: PieceProps) {
             };
             let move = false;
             for (const validator of props.validatorsPos) {
-                if (validator(from, to, {activeSide: props.color})) {
+                if (validator(from, to, state)) {
                     move = true;
                     break;
                 }
             }
             for (const validator of props.validatorsNeg) {
-                if (validator(from, to, {activeSide: props.color})) {
+                if (validator(from, to, state)) {
                     move = false;
                     break;
                 }
             }
             return move ? to : from;
         });
-    }, [offsetY, offsetX, props.color, props.validatorsNeg, props.validatorsPos]);
+    }, [offsetY, offsetX, state, props.validatorsNeg, props.validatorsPos]);
     //TODO Maybe use reducer?
 
     useEffect(() => {
