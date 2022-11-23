@@ -1,27 +1,27 @@
-import {MoveValidator, TPiece, PieceType, Side} from "../Types";
-import {negate, onField} from "../util";
-import {bishop, howDoesItMove, king, pawn, queen, rook} from "../std";
+import {MoveValidator, TPiece, PieceType, Side} from "../types";
+import {negate, onField, standardMove} from "../validators/util";
+import {Bishop, HowDoesItMove, King, Pawn, Queen, Rook} from "../validators/std";
 
 function getValidatorsPos(piece: PieceType) {
     const validatorsPos: MoveValidator[] = [];
     switch(piece) {
         case "horsey":
-            validatorsPos.push(howDoesItMove);
+            validatorsPos.push(HowDoesItMove);
             break;
         case "bishop":
-            validatorsPos.push(bishop);
+            validatorsPos.push(Bishop);
             break;
         case "king":
-            validatorsPos.push(king);
+            validatorsPos.push(King);
             break;
         case "pawn":
-            validatorsPos.push(pawn);
+            validatorsPos.push(Pawn);
             break;
         case "queen":
-            validatorsPos.push(queen);
+            validatorsPos.push(Queen);
             break;
         case "rook":
-            validatorsPos.push(rook);
+            validatorsPos.push(Rook);
             break;
     }
     return validatorsPos;
@@ -40,7 +40,7 @@ export function defaultPieces() {
             color: Side.White,
             pieceType: piece,
             validatorsPos: validatorsPos,
-            validatorsNeg: [negate(onField)],
+            validatorsNeg: [standardMove(negate(onField))],
         });
     });
     frontRow.forEach((piece, index) => {
@@ -51,7 +51,7 @@ export function defaultPieces() {
             color: Side.White,
             pieceType: piece,
             validatorsPos: validatorsPos,
-            validatorsNeg: [negate(onField)],
+            validatorsNeg: [standardMove(negate(onField))],
         });
     });
     backRow.forEach((piece, index) => {
@@ -62,7 +62,7 @@ export function defaultPieces() {
             color: Side.Black,
             pieceType: piece,
             validatorsPos: validatorsPos,
-            validatorsNeg: [negate(onField)],
+            validatorsNeg: [standardMove(negate(onField))],
         });
     });
     frontRow.forEach((piece, index) => {
@@ -73,7 +73,7 @@ export function defaultPieces() {
             color: Side.Black,
             pieceType: piece,
             validatorsPos: validatorsPos,
-            validatorsNeg: [negate(onField)],
+            validatorsNeg: [standardMove(negate(onField))],
         });
     });
     return pieces;

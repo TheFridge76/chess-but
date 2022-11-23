@@ -1,7 +1,8 @@
 import styles from "../style/pieces.module.css"
 import React, {useContext, useEffect, useMemo, useReducer} from "react";
-import {GameState, MoveValidator, Result, ResultType, StateUpdater, TPiece} from "../rules/Types";
+import {GameState, MoveValidator, StateUpdater, TPiece} from "../rules/types";
 import {StateContext} from "./Game";
+import {MoveResult, Result, ResultType} from "../rules/results";
 
 function touchToMouse(e: React.TouchEvent | TouchEvent, handler: (e: React.Touch | Touch) => void) {
     if (e.touches.length === 1) {
@@ -67,31 +68,29 @@ function reducer(state: PieceState, action: {
             const validatorsPos = action.payload.validatorsPos as MoveValidator[];
             const validatorsNeg = action.payload.validatorsNeg as MoveValidator[];
 
-            const updates = [];
+            let updates = [];
 
-            let move = false;
             for (const validator of validatorsPos) {
-                if (validator(from, to, gameState)) {
-                    move = true;
-                    updates.push({
-                        type: ResultType.EndTurn,
-                    });
+                const results = validator(from, to, gameState);
+                if (results.length > 0) {
+                    updates.push(...results);
                     break;
                 }
             }
             for (const validator of validatorsNeg) {
-                if (validator(from, to, gameState)) {
-                    move = false;
+                if (validator(from, to, gameState).length !== 0) {
+                    updates = [];
                     break;
                 }
             }
 
+            const move = updates.find((update) => update.type === ResultType.Move) as MoveResult;
             return {
                 dragging: false,
                 dragStart: {x: 0, y: 0},
                 dragPos: {x: 0, y: 0},
-                square: move
-                    ? {row: to.row, col: to.col}
+                square: move !== undefined
+                    ? {row: move.to.row, col: move.to.col}
                     : {row: state.square.row, col: state.square.col},
                 updates: updates,
             };

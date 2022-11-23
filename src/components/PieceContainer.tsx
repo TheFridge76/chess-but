@@ -2,7 +2,7 @@ import {Piece} from "./Piece";
 import Field from "./Field";
 import {useContext} from "react";
 import {StateContext} from "./Game";
-import {StateUpdater} from "../rules/Types";
+import {StateUpdater} from "../rules/types";
 
 type BoardProps = {
     updateState: StateUpdater,

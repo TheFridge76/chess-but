@@ -2,8 +2,9 @@ import FieldContainer from "./FieldContainer";
 import Board from "./Board";
 import PieceContainer from "./PieceContainer";
 import React, {useCallback, useMemo, useState} from "react";
-import {GameState, Result, ResultType, Side} from "../rules/Types";
+import {GameState, Side} from "../rules/types";
 import {defaultPieces} from "../rules/setup/std";
+import {Result, ResultType} from "../rules/results";
 
 export const StateContext = React.createContext<GameState>({
     activeSide: Side.White,

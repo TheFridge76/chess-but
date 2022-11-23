@@ -1,16 +1,8 @@
+import {Result} from "./results";
+
 export type Square = {
     row: number,
     col: number,
-}
-
-export enum ResultType {
-    Move,
-    Capture,
-    EndTurn,
-}
-
-export type Result = {
-    type: ResultType,
 }
 
 export enum Side {
@@ -34,7 +26,6 @@ export type GameState = {
     pieces: TPiece[],
 }
 
-//TODO Include actual result in return value
-export type MoveValidator = (from: Square, to: Square, state: GameState) => boolean;
-
+export type StandardMoveCondition = (from: Square, to: Square, state: GameState) => boolean;
+export type MoveValidator = (from: Square, to: Square, state: GameState) => Result[];
 export type StateUpdater = (update: Result) => void;
