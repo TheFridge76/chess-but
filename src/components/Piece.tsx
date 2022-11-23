@@ -1,19 +1,12 @@
 import styles from "../style/pieces.module.css"
 import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
-import {MoveValidator, PieceType, Side} from "../rules/Types";
+import {PieceState} from "../rules/Types";
 import {StateContext} from "./Game";
 
 type PieceProps = {
-    pieceType: PieceType,
-    color: Side,
-    row: number,
-    col: number,
-    validatorsPos: MoveValidator[],
-    validatorsNeg: MoveValidator[],
 };
 
-//TODO Use PieceProps & PieceState as type of props
-export function Piece(props: PieceProps) {
+export function Piece(props: PieceProps & PieceState) {
     const [dragging, setDragging] = useState(false);
     const [dragStartX, setDragStartX] = useState(0);
     const [dragStartY, setDragStartY] = useState(0);
@@ -110,8 +103,8 @@ export function Piece(props: PieceProps) {
     return (
         <div
             className={`${styles.piece} ${styles[props.pieceType]} ${styles[props.color]} ${dragging ? styles.dragging : ""}`}
-            onMouseDown={drag}
-            onTouchStart={dragTouch}
+            onMouseDown={state.activeSide === props.color ? drag : undefined}
+            onTouchStart={state.activeSide === props.color ? dragTouch : undefined}
             style={style}
         />
     );
