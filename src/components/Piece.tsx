@@ -1,6 +1,6 @@
 import styles from "../style/pieces.module.css"
-import React, {useContext, useEffect, useReducer} from "react";
-import {TPiece, StateUpdater, GameState, MoveValidator} from "../rules/Types";
+import React, {useContext, useEffect, useMemo, useReducer} from "react";
+import {GameState, MoveValidator, Result, ResultType, StateUpdater, TPiece} from "../rules/Types";
 import {StateContext} from "./Game";
 
 function touchToMouse(e: React.TouchEvent | TouchEvent, handler: (e: React.Touch | Touch) => void) {
@@ -21,10 +21,11 @@ type PieceState = {
     dragStart: { x: number, y: number },
     dragPos: { x: number, y: number },
     square: { row: number, col: number },
+    updates: Result[],
 };
 
 function reducer(state: PieceState, action: {
-    type: "drag" | "move" | "drop",
+    type: "drag" | "move" | "drop" | "clear",
     payload: {
         e?: React.MouseEvent | MouseEvent | React.Touch | Touch,
         gameState?: GameState,
@@ -40,6 +41,7 @@ function reducer(state: PieceState, action: {
                 dragStart: {x: eDrag.clientX, y: eDrag.clientY},
                 dragPos: {x: eDrag.clientX, y: eDrag.clientY},
                 square: {row: state.square.row, col: state.square.col},
+                updates: state.updates,
             };
         case "move":
             const eMove = action.payload.e as React.MouseEvent | React.Touch;
@@ -48,6 +50,7 @@ function reducer(state: PieceState, action: {
                 dragStart: {x: state.dragStart.x, y: state.dragStart.y},
                 dragPos: {x: eMove.clientX, y: eMove.clientY},
                 square: {row: state.square.row, col: state.square.col},
+                updates: state.updates,
             };
         case "drop":
             const offset = getOffset(state);
@@ -64,10 +67,15 @@ function reducer(state: PieceState, action: {
             const validatorsPos = action.payload.validatorsPos as MoveValidator[];
             const validatorsNeg = action.payload.validatorsNeg as MoveValidator[];
 
+            const updates = [];
+
             let move = false;
             for (const validator of validatorsPos) {
                 if (validator(from, to, gameState)) {
                     move = true;
+                    updates.push({
+                        type: ResultType.EndTurn,
+                    });
                     break;
                 }
             }
@@ -85,6 +93,18 @@ function reducer(state: PieceState, action: {
                 square: move
                     ? {row: to.row, col: to.col}
                     : {row: state.square.row, col: state.square.col},
+                updates: updates,
+            };
+        case "clear":
+            if (state.updates.length === 0) {
+                return state;
+            }
+            return {
+                dragging: state.dragging,
+                dragStart: state.dragStart,
+                dragPos: state.dragPos,
+                square: state.square,
+                updates: [],
             };
         default:
             return state;
@@ -102,7 +122,9 @@ export function Piece(props: PieceProps & TPiece) {
         dragStart: {x: 0, y: 0},
         dragPos: {x: 0, y: 0},
         square: {row: props.row, col: props.col},
+        updates: [],
     });
+    const updateState = useMemo(() => props.updateState, [props.updateState]);
 
     useEffect(() => {
         if (state.dragging) {
@@ -135,6 +157,13 @@ export function Piece(props: PieceProps & TPiece) {
             };
         }
     }, [state.dragging, gameState, props.validatorsPos, props.validatorsNeg]);
+
+    useEffect(() => {
+        for (const update of state.updates) {
+            updateState(update);
+        }
+        dispatch({type: "clear", payload: {}});
+    }, [state.updates, updateState]);
 
     const style = {
         top: getOffset(state).y,

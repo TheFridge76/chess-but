@@ -3,11 +3,15 @@ export type Square = {
     col: number,
 }
 
-/*enum ResultType {
+export enum ResultType {
     Move,
     Capture,
     EndTurn,
-}*/
+}
+
+export type Result = {
+    type: ResultType,
+}
 
 export enum Side {
     White = "white",
@@ -33,4 +37,4 @@ export type GameState = {
 //TODO Include actual result in return value
 export type MoveValidator = (from: Square, to: Square, state: GameState) => boolean;
 
-export type StateUpdater = () => void;
+export type StateUpdater = (update: Result) => void;

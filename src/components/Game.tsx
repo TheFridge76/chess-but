@@ -1,8 +1,8 @@
 import FieldContainer from "./FieldContainer";
 import Board from "./Board";
 import PieceContainer from "./PieceContainer";
-import React, {useMemo, useState} from "react";
-import {GameState, Side} from "../rules/Types";
+import React, {useCallback, useMemo, useState} from "react";
+import {GameState, Result, ResultType, Side} from "../rules/Types";
 import {defaultPieces} from "../rules/setup/std";
 
 export const StateContext = React.createContext<GameState>({
@@ -21,18 +21,23 @@ export default function Game() {
         };
     }, [activeSide, pieces]);
 
-    function updateState() {
-        let newSide: Side;
-        switch (state.activeSide) {
-            case Side.White:
-                newSide = Side.Black;
-                break;
-            case Side.Black:
-                newSide = Side.White;
-                break;
+    const updateState = useCallback((update: Result) => {
+        switch (update.type) {
+            case ResultType.EndTurn:
+                setActiveSide((side) => {
+                    let newSide;
+                    switch (side) {
+                        case Side.White:
+                            newSide = Side.Black;
+                            break;
+                        case Side.Black:
+                            newSide = Side.White;
+                            break;
+                    }
+                    return newSide;
+                });
         }
-        setActiveSide(newSide);
-    }
+    }, []);
 
     return (
         <StateContext.Provider value={state}>
