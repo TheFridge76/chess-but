@@ -1,4 +1,4 @@
-import {MoveValidator, PieceState, PieceType, Side} from "../Types";
+import {MoveValidator, TPiece, PieceType, Side} from "../Types";
 import {negate, onField} from "../util";
 import {bishop, howDoesItMove, king, pawn, queen, rook} from "../std";
 
@@ -31,7 +31,7 @@ export function defaultPieces() {
     const backRow: PieceType[] = ["rook", "horsey", "bishop", "queen", "king", "bishop", "horsey", "rook"];
     const frontRow: PieceType[] = ["pawn", "pawn", "pawn", "pawn", "pawn", "pawn", "pawn", "pawn"];
 
-    const pieces: PieceState[] = [];
+    const pieces: TPiece[] = [];
     backRow.forEach((piece, index) => {
         const validatorsPos = getValidatorsPos(piece);
         pieces.push({

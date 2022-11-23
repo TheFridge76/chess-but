@@ -16,7 +16,7 @@ export enum Side {
 
 export type PieceType = "pawn" | "rook" | "horsey" | "bishop" | "queen" | "king";
 
-export type PieceState = {
+export type TPiece = {
     pieceType: PieceType,
     color: Side,
     row: number,
@@ -27,7 +27,7 @@ export type PieceState = {
 
 export type GameState = {
     activeSide: Side,
-    pieces: PieceState[],
+    pieces: TPiece[],
 }
 
 //TODO Include actual result in return value
