@@ -1,5 +1,5 @@
-import {MoveValidator, Side, StandardMoveCondition} from "../types";
-import {flip, standardMove} from "./util";
+import {MoveValidator, Side, Square, StandardMoveCondition} from "../types";
+import {flip, occupied, occupiedOpponent, standardMove} from "./util";
 import {EndTurnResult, MoveResult} from "../results";
 
 //TODO Prevent moving through pieces
@@ -50,10 +50,10 @@ export const HowDoesItMove: MoveValidator = (from, to, _state) => {
     return standardMove(HowDoesItMoveCondition)(from, to, _state);
 };
 
-export const Pawn: MoveValidator = (from, to, state) => {
+function getPawnDistance(from: Square, to: Square, side: Side) {
     let virtualFrom;
     let virtualTo;
-    switch (state.activeSide) {
+    switch (side) {
         case Side.White:
             virtualFrom = from;
             virtualTo = to;
@@ -63,9 +63,25 @@ export const Pawn: MoveValidator = (from, to, state) => {
             virtualTo = flip(to);
             break;
     }
-    const distY = virtualTo.row - virtualFrom.row;
-    const distX = Math.abs(virtualFrom.col - virtualTo.col);
-    return ((distX === 0 && distY === 1) || (distX === 0 && distY === 2 && virtualFrom.row === 2))
+    return {
+        distX: Math.abs(virtualFrom.col - virtualTo.col),
+        distY: virtualTo.row - virtualFrom.row,
+        virtualRow: virtualFrom.row,
+    };
+}
+
+export const Pawn: MoveValidator = (from, to, state) => {
+    const {distX, distY, virtualRow} = getPawnDistance(from, to, state.activeSide);
+    const singleMove = (distX === 0 && distY === 1);
+    const doubleMove = (distX === 0 && distY === 2 && virtualRow === 2);
+    return (singleMove || doubleMove) && !occupied(from, to, state)
         ? [new MoveResult(from, to), new EndTurnResult()]
         : [];
+}
+
+export const PawnCapture: MoveValidator = (from, to, state) => {
+    return standardMove((from, to, state) => {
+        const {distX, distY} = getPawnDistance(from, to, state.activeSide);
+        return (distX === 1 && distY === 1 && occupiedOpponent(from, to, state));
+    })(from, to, state);
 }

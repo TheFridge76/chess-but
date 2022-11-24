@@ -31,3 +31,18 @@ export const always: StandardMoveCondition = (from, to, _state) => {
 export const onField: StandardMoveCondition = (from, to, _state) => {
     return (to.row >= 1 && to.row <= 8 && to.col >= 1 && to.col <= 8);
 }
+
+export const occupied: StandardMoveCondition = (_from, to, state) => {
+    return state.pieces.find((piece) =>
+        piece.row === to.row
+        && piece.col === to.col
+    ) !== undefined;
+}
+
+export const occupiedOpponent: StandardMoveCondition = (_from, to, state) => {
+    return state.pieces.find((piece) =>
+        piece.row === to.row
+        && piece.col === to.col
+        && piece.color !== state.activeSide
+    ) !== undefined;
+}
