@@ -4,7 +4,7 @@ import PieceContainer from "./PieceContainer";
 import React, {useCallback, useMemo, useState} from "react";
 import {GameState, Side} from "../rules/types";
 import {defaultPieces} from "../rules/setup/std";
-import {Result, ResultType} from "../rules/results";
+import {CaptureResult, MoveResult, Result, ResultType} from "../rules/results";
 
 export const StateContext = React.createContext<GameState>({
     activeSide: Side.White,
@@ -13,7 +13,7 @@ export const StateContext = React.createContext<GameState>({
 
 export default function Game() {
     const [activeSide, setActiveSide] = useState(Side.White);
-    const [pieces/*, setPieces*/] = useState(defaultPieces());
+    const [pieces, setPieces] = useState(defaultPieces());
 
     const state = useMemo(() => {
         return {
@@ -37,6 +37,28 @@ export default function Game() {
                     }
                     return newSide;
                 });
+                break;
+            case ResultType.Move:
+                setPieces((pieces) => {
+                    const move = update as MoveResult;
+                    const newPieces = [...pieces];
+                    newPieces.forEach((piece) => {
+                        if (piece.row === move.from.row && piece.col === move.from.col) {
+                            piece.row = move.to.row;
+                            piece.col = move.to.col;
+                        }
+                    });
+                    return newPieces;
+                });
+                break;
+            case ResultType.Capture:
+                setPieces((pieces) => {
+                    const capture = update as CaptureResult;
+                    return pieces.filter((piece) => {
+                        return piece.row !== capture.on.row || piece.col !== capture.on.col;
+                    });
+                });
+                break;
         }
     }, []);
 

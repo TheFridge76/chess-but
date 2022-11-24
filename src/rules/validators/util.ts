@@ -11,7 +11,7 @@ export function flip(square: Square): Square {
 export const standardMove = (condition: StandardMoveCondition) => {
     const validator: MoveValidator = (from, to, state) => {
         if (condition(from, to, state)) {
-            return [new MoveResult(from, to), new CaptureResult(to), new EndTurnResult()];
+            return [new CaptureResult(to), new MoveResult(from, to), new EndTurnResult()];
         }
         return [];
     };

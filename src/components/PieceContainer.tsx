@@ -2,7 +2,11 @@ import {Piece} from "./Piece";
 import Field from "./Field";
 import {useContext} from "react";
 import {StateContext} from "./Game";
-import {StateUpdater} from "../rules/types";
+import {StateUpdater, TPiece} from "../rules/types";
+
+function getKey(piece: TPiece) {
+    return `${piece.col}_${piece.row}`;
+}
 
 type BoardProps = {
     updateState: StateUpdater,
@@ -13,9 +17,9 @@ function Board(props: BoardProps) {
 
     return (
         <Field>
-            {state.pieces.map((piece, index) => {
+            {state.pieces.map((piece) => {
                 return <Piece
-                    key={index}
+                    key={getKey(piece)}
                     row={piece.row}
                     col={piece.col}
                     color={piece.color}
