@@ -1,6 +1,6 @@
 import {MoveValidator, TPiece, PieceType, Side} from "../types";
 import {negate, onField, standardMove} from "../validators/util";
-import {Bishop, HowDoesItMove, King, Pawn, PawnCapture, Queen, Rook} from "../validators/std";
+import {Bishop, Castling, HowDoesItMove, King, Pawn, PawnCapture, Queen, Rook} from "../validators/std";
 
 function getValidatorsPos(piece: PieceType) {
     const validatorsPos: MoveValidator[] = [];
@@ -12,7 +12,7 @@ function getValidatorsPos(piece: PieceType) {
             validatorsPos.push(Bishop);
             break;
         case "king":
-            validatorsPos.push(King);
+            validatorsPos.push(King, Castling);
             break;
         case "pawn":
             validatorsPos.push(Pawn, PawnCapture);

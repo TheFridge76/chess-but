@@ -24,6 +24,7 @@ export type TPiece = {
 export type GameState = {
     activeSide: Side,
     pieces: TPiece[],
+    history: Result[],
 }
 
 export type StandardMoveCondition = (from: Square, to: Square, state: GameState) => boolean;

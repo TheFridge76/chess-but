@@ -9,18 +9,21 @@ import {CaptureResult, MoveResult, Result, ResultType} from "../rules/results";
 export const StateContext = React.createContext<GameState>({
     activeSide: Side.White,
     pieces: [],
+    history: [],
 });
 
 export default function Game() {
     const [activeSide, setActiveSide] = useState(Side.White);
     const [pieces, setPieces] = useState(defaultPieces());
+    const [history, setHistory] = useState<Result[]>([]);
 
     const state = useMemo(() => {
         return {
             activeSide: activeSide,
             pieces: pieces,
+            history: history,
         };
-    }, [activeSide, pieces]);
+    }, [activeSide, pieces, history]);
 
     const updateState = useCallback((update: Result) => {
         switch (update.type) {
@@ -60,6 +63,7 @@ export default function Game() {
                 });
                 break;
         }
+        setHistory((history) => [...history, update]);
     }, []);
 
     return (

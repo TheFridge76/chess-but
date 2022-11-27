@@ -8,10 +8,18 @@ export function flip(square: Square): Square {
     }
 }
 
+export function sameSquare(squareA: Square, squareB: Square) {
+    return squareA.row === squareB.row && squareA.col === squareB.col;
+}
+
 export const standardMove = (condition: StandardMoveCondition) => {
     const validator: MoveValidator = (from, to, state) => {
         if (condition(from, to, state)) {
-            return [new CaptureResult(to), new MoveResult(from, to), new EndTurnResult()];
+            const results = [new MoveResult(from, to), new EndTurnResult()];
+            if (occupiedOpponent(from, to, state)) {
+                results.unshift(new CaptureResult(to));
+            }
+            return results;
         }
         return [];
     };

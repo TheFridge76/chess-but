@@ -1,6 +1,6 @@
 import {MoveValidator, Side, Square, StandardMoveCondition} from "../types";
-import {flip, occupied, occupiedOpponent, standardMove} from "./util";
-import {EndTurnResult, MoveResult} from "../results";
+import {flip, occupied, occupiedOpponent, sameSquare, standardMove} from "./util";
+import {CaptureResult, EndTurnResult, MoveResult, ResultType} from "../results";
 
 //TODO Prevent moving through pieces
 
@@ -84,4 +84,56 @@ export const PawnCapture: MoveValidator = (from, to, state) => {
         const {distX, distY} = getPawnDistance(from, to, state.activeSide);
         return (distX === 1 && distY === 1 && occupiedOpponent(from, to, state));
     })(from, to, state);
+}
+
+export const Castling: MoveValidator = (from, to, state) => {
+    //TODO Cant move through check
+    //TODO Check if path is empty
+    const short = {row: from.row, col: 8};
+    const long = {row: from.row, col: 1};
+    let partner: Square;
+    const partnerTo = {
+        row: from.row,
+        col: from.col,
+    };
+
+    const colDiff = to.col - from.col;
+    if (to.row - from.row !== 0) {
+        // King moved from home row
+        return [];
+    } else if (colDiff === 2) {
+        partner = short;
+        partnerTo.col = 6;
+    } else if (colDiff === -2) {
+        partner = long;
+        partnerTo.col = 4;
+    } else {
+        // King tried moving too far or too short
+        return [];
+    }
+
+    for (const update of state.history) {
+        switch (update.type) {
+            case ResultType.Capture:
+                const capture = update as CaptureResult;
+                if (sameSquare(capture.on, partner)) {
+                    // Partner piece was captured
+                    return [];
+                }
+                break;
+            case ResultType.Move:
+                const move = update as MoveResult;
+                if (sameSquare(move.from, partner)) {
+                    // Partner piece has moved
+                    return [];
+                }
+                if (sameSquare(move.to, from)) {
+                    // Some piece moved to our square.
+                    // This must mean, that the king left this square at some point.
+                    return [];
+                }
+                break;
+        }
+    }
+    return [new MoveResult(from, to), new MoveResult(partner, partnerTo), new EndTurnResult()];
 }
