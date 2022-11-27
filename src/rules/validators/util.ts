@@ -26,9 +26,21 @@ export const standardMove = (condition: StandardMoveCondition) => {
     return validator;
 };
 
-export function negate(condition: StandardMoveCondition) {
-    return (from: Square, to: Square, state: any) => {
+export function negate(condition: StandardMoveCondition): StandardMoveCondition {
+    return (from, to, state) => {
         return !condition(from, to, state);
+    };
+}
+
+export function every(...conditions: StandardMoveCondition[]): StandardMoveCondition {
+    return (from, to, state) => {
+        return conditions.every((condition) => condition(from, to, state));
+    };
+}
+
+export function some(...conditions: StandardMoveCondition[]): StandardMoveCondition {
+    return (from, to, state) => {
+        return conditions.some((condition) => condition(from, to, state));
     };
 }
 
@@ -53,4 +65,36 @@ export const occupiedOpponent: StandardMoveCondition = (_from, to, state) => {
         && piece.col === to.col
         && piece.color !== state.activeSide
     ) !== undefined;
+}
+
+export const occupiedAlly: StandardMoveCondition = (_from, to, state) => {
+    return state.pieces.find((piece) =>
+        piece.row === to.row
+        && piece.col === to.col
+        && piece.color === state.activeSide
+    ) !== undefined;
+}
+
+export const emptyPath: StandardMoveCondition = (from, to, state) => {
+    const diffRow = (to.row - from.row);
+    const diffCol = (to.col - from.col);
+    if (diffRow !== 0 && diffCol !== 0 && Math.abs(diffRow) !== Math.abs(diffCol)) {
+        // Path is neither straight, nor diagonal.
+        // We don't want to handle this, so just let it pass ¯\_(ツ)_/¯
+        return true;
+    }
+    const incRow = Math.max(Math.min(diffRow, 1), -1);
+    const incCol = Math.max(Math.min(diffCol, 1), -1);
+    let square = {
+        row: from.row + incRow,
+        col: from.col + incCol,
+    }
+    while (square.row !== to.row || square.col !== to.col) {
+        if (occupied(square, square, state)) {
+            return false;
+        }
+        square.row += incRow;
+        square.col += incCol;
+    }
+    return true;
 }

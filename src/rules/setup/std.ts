@@ -1,27 +1,35 @@
 import {MoveValidator, TPiece, PieceType, Side} from "../types";
-import {negate, onField, standardMove} from "../validators/util";
-import {Bishop, Castling, HowDoesItMove, King, Pawn, PawnCapture, Queen, Rook} from "../validators/std";
+import {emptyPath, every, negate, occupiedAlly, onField, some, standardMove} from "../validators/util";
+import {
+    BishopCondition,
+    Castling,
+    HowDoesItMoveCondition,
+    KingCondition,
+    Pawn,
+    PawnCapture,
+    RookCondition
+} from "../validators/std";
 
 function getValidatorsPos(piece: PieceType) {
     const validatorsPos: MoveValidator[] = [];
     switch(piece) {
         case "horsey":
-            validatorsPos.push(HowDoesItMove);
+            validatorsPos.push(standardMove(HowDoesItMoveCondition));
             break;
         case "bishop":
-            validatorsPos.push(Bishop);
+            validatorsPos.push(standardMove(every(BishopCondition, emptyPath)));
             break;
         case "king":
-            validatorsPos.push(King, Castling);
+            validatorsPos.push(standardMove(KingCondition), Castling);
             break;
         case "pawn":
             validatorsPos.push(Pawn, PawnCapture);
             break;
         case "queen":
-            validatorsPos.push(Queen);
+            validatorsPos.push(standardMove(every(some(RookCondition, BishopCondition), emptyPath)));
             break;
         case "rook":
-            validatorsPos.push(Rook);
+            validatorsPos.push(standardMove(every(RookCondition, emptyPath)));
             break;
     }
     return validatorsPos;
@@ -30,6 +38,8 @@ function getValidatorsPos(piece: PieceType) {
 export function defaultPieces() {
     const backRow: PieceType[] = ["rook", "horsey", "bishop", "queen", "king", "bishop", "horsey", "rook"];
     const frontRow: PieceType[] = ["pawn", "pawn", "pawn", "pawn", "pawn", "pawn", "pawn", "pawn"];
+
+    const validatorsNeg = [standardMove(negate(onField)), standardMove(occupiedAlly)];
 
     const pieces: TPiece[] = [];
     backRow.forEach((piece, index) => {
@@ -40,7 +50,7 @@ export function defaultPieces() {
             color: Side.White,
             pieceType: piece,
             validatorsPos: validatorsPos,
-            validatorsNeg: [standardMove(negate(onField))],
+            validatorsNeg: validatorsNeg,
         });
     });
     frontRow.forEach((piece, index) => {
@@ -51,7 +61,7 @@ export function defaultPieces() {
             color: Side.White,
             pieceType: piece,
             validatorsPos: validatorsPos,
-            validatorsNeg: [standardMove(negate(onField))],
+            validatorsNeg: validatorsNeg,
         });
     });
     backRow.forEach((piece, index) => {
@@ -62,7 +72,7 @@ export function defaultPieces() {
             color: Side.Black,
             pieceType: piece,
             validatorsPos: validatorsPos,
-            validatorsNeg: [standardMove(negate(onField))],
+            validatorsNeg: validatorsNeg,
         });
     });
     frontRow.forEach((piece, index) => {
@@ -73,7 +83,7 @@ export function defaultPieces() {
             color: Side.Black,
             pieceType: piece,
             validatorsPos: validatorsPos,
-            validatorsNeg: [standardMove(negate(onField))],
+            validatorsNeg: validatorsNeg,
         });
     });
     return pieces;
