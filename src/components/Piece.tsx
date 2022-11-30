@@ -176,10 +176,10 @@ export function Piece(props: PieceProps & TPiece) {
             className={`${styles.piece} ${styles[props.pieceType]} ${styles[props.color]} ${state.dragging ? styles.dragging : ""}`}
             onMouseDown={gameState.activeSide === props.color
                 ? (e) => dispatch({type: "drag", payload: {e}})
-                : undefined}
+                : (e) => {e.preventDefault();}}
             onTouchStart={gameState.activeSide === props.color
                 ? (e) => touchToMouse(e, (e) => dispatch({type: "drag", payload: {e}}))
-                : undefined}
+                : (e) => {e.preventDefault();}}
             style={style}
         />
     );
