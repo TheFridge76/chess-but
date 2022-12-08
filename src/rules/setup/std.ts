@@ -1,5 +1,5 @@
-import {MoveValidator, TPiece, PieceType, Side} from "../types";
-import {emptyPath, every, negate, occupiedAlly, onField, some, standardMove} from "../validators/util";
+import {MoveValidator, TPiece, PieceType, Side} from "../../model/types";
+import {emptyPath, occupiedAlly, onField, standardMove} from "../validators/util";
 import {
     BishopCondition,
     Castling,
@@ -9,6 +9,7 @@ import {
     PawnCapture,
     RookCondition
 } from "../validators/std";
+import {every, negate, some} from "../validators/modifiers";
 
 function getValidatorsPos(piece: PieceType) {
     const validatorsPos: MoveValidator[] = [];

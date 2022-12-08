@@ -5,6 +5,10 @@ export type Square = {
     col: number,
 }
 
+export function sameSquare(squareA: Square, squareB: Square) {
+    return squareA.row === squareB.row && squareA.col === squareB.col;
+}
+
 export enum Side {
     White = "white",
     Black = "black",
@@ -27,6 +31,6 @@ export type GameState = {
     history: Result[],
 }
 
-export type StandardMoveCondition = (from: Square, to: Square, state: GameState) => boolean;
+export type MoveCondition = (from: Square, to: Square, state: GameState) => boolean;
 export type MoveValidator = (from: Square, to: Square, state: GameState) => Result[];
 export type StateUpdater = (update: Result) => void;

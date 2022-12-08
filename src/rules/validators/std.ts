@@ -1,30 +1,37 @@
-import {MoveValidator, Side, Square, StandardMoveCondition} from "../types";
-import {emptyPath, flip, occupied, occupiedOpponent, sameSquare, standardMove} from "./util";
-import {CaptureResult, EndTurnResult, MoveResult, ResultType} from "../results";
+import {MoveValidator, sameSquare, Side, Square, MoveCondition} from "../../model/types";
+import {CaptureResult, EndTurnResult, MoveResult, ResultType} from "../../model/results";
+import {emptyPath, occupied, occupiedOpponent, standardMove} from "./util";
 
-export const KingCondition: StandardMoveCondition = (from, to, _state) => {
+export const KingCondition: MoveCondition = (from, to, _state) => {
     const distY = Math.abs(from.row - to.row);
     const distX = Math.abs(from.col - to.col);
     return (distX <= 1 && distY <= 1 && distX + distY > 0);
 };
 
-export const RookCondition: StandardMoveCondition = (from, to, _state) => {
+export const RookCondition: MoveCondition = (from, to, _state) => {
     const distY = Math.abs(from.row - to.row);
     const distX = Math.abs(from.col - to.col);
     return ((distX > 0 && distY === 0) || (distY > 0 && distX === 0));
 };
 
-export const BishopCondition: StandardMoveCondition = (from, to, _state) => {
+export const BishopCondition: MoveCondition = (from, to, _state) => {
     const distY = Math.abs(from.row - to.row);
     const distX = Math.abs(from.col - to.col);
     return (distX === distY && distX !== 0);
 };
 
-export const HowDoesItMoveCondition: StandardMoveCondition = (from, to, _state) => {
+export const HowDoesItMoveCondition: MoveCondition = (from, to, _state) => {
     const distY = Math.abs(from.row - to.row);
     const distX = Math.abs(from.col - to.col);
     return ((distX === 2 && distY === 1) || (distX === 1 && distY === 2));
 };
+
+function flip(square: Square): Square {
+    return {
+        row: 9 - square.row,
+        col: square.col,
+    }
+}
 
 function getPawnDistance(from: Square, to: Square, side: Side) {
     let virtualFrom;

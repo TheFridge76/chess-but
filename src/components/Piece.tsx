@@ -1,8 +1,8 @@
 import styles from "../style/pieces.module.css"
 import React, {useContext, useEffect, useMemo, useReducer} from "react";
-import {GameState, MoveValidator, StateUpdater, TPiece} from "../rules/types";
+import {GameState, MoveValidator, StateUpdater, TPiece} from "../model/types";
 import {StateContext} from "./Game";
-import {MoveResult, Result, ResultType} from "../rules/results";
+import {MoveResult, Result, ResultType} from "../model/results";
 
 function touchToMouse(e: React.TouchEvent | TouchEvent, handler: (e: React.Touch | Touch) => void) {
     if (e.touches.length === 1) {

@@ -1,18 +1,7 @@
-import {MoveValidator, Square, StandardMoveCondition} from "../types";
-import {CaptureResult, EndTurnResult, MoveResult} from "../results";
+import {MoveValidator, MoveCondition} from "../../model/types";
+import {CaptureResult, EndTurnResult, MoveResult} from "../../model/results";
 
-export function flip(square: Square): Square {
-    return {
-        row: 9 - square.row,
-        col: square.col,
-    }
-}
-
-export function sameSquare(squareA: Square, squareB: Square) {
-    return squareA.row === squareB.row && squareA.col === squareB.col;
-}
-
-export const standardMove = (condition: StandardMoveCondition) => {
+export const standardMove = (condition: MoveCondition) => {
     const validator: MoveValidator = (from, to, state) => {
         if (condition(from, to, state)) {
             const results = [new MoveResult(from, to), new EndTurnResult()];
@@ -26,40 +15,18 @@ export const standardMove = (condition: StandardMoveCondition) => {
     return validator;
 };
 
-export function negate(condition: StandardMoveCondition): StandardMoveCondition {
-    return (from, to, state) => {
-        return !condition(from, to, state);
-    };
-}
-
-export function every(...conditions: StandardMoveCondition[]): StandardMoveCondition {
-    return (from, to, state) => {
-        return conditions.every((condition) => condition(from, to, state));
-    };
-}
-
-export function some(...conditions: StandardMoveCondition[]): StandardMoveCondition {
-    return (from, to, state) => {
-        return conditions.some((condition) => condition(from, to, state));
-    };
-}
-
-export const always: StandardMoveCondition = (from, to, _state) => {
-    return true;
-}
-
-export const onField: StandardMoveCondition = (from, to, _state) => {
+export const onField: MoveCondition = (from, to, _state) => {
     return (to.row >= 1 && to.row <= 8 && to.col >= 1 && to.col <= 8);
 }
 
-export const occupied: StandardMoveCondition = (_from, to, state) => {
+export const occupied: MoveCondition = (_from, to, state) => {
     return state.pieces.find((piece) =>
         piece.row === to.row
         && piece.col === to.col
     ) !== undefined;
 }
 
-export const occupiedOpponent: StandardMoveCondition = (_from, to, state) => {
+export const occupiedOpponent: MoveCondition = (_from, to, state) => {
     return state.pieces.find((piece) =>
         piece.row === to.row
         && piece.col === to.col
@@ -67,7 +34,7 @@ export const occupiedOpponent: StandardMoveCondition = (_from, to, state) => {
     ) !== undefined;
 }
 
-export const occupiedAlly: StandardMoveCondition = (_from, to, state) => {
+export const occupiedAlly: MoveCondition = (_from, to, state) => {
     return state.pieces.find((piece) =>
         piece.row === to.row
         && piece.col === to.col
@@ -75,7 +42,7 @@ export const occupiedAlly: StandardMoveCondition = (_from, to, state) => {
     ) !== undefined;
 }
 
-export const emptyPath: StandardMoveCondition = (from, to, state) => {
+export const emptyPath: MoveCondition = (from, to, state) => {
     const diffRow = (to.row - from.row);
     const diffCol = (to.col - from.col);
     if (diffRow !== 0 && diffCol !== 0 && Math.abs(diffRow) !== Math.abs(diffCol)) {
