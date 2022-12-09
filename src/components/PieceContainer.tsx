@@ -2,7 +2,8 @@ import {Piece} from "./Piece";
 import Field from "./Field";
 import {useContext} from "react";
 import {StateContext} from "./Game";
-import {StateUpdater, TPiece} from "../model/types";
+import {TPiece} from "../model/types";
+import {StateUpdater} from "../model/state";
 
 function getKey(piece: TPiece) {
     return `${piece.col}_${piece.row}`;
