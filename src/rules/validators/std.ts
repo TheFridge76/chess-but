@@ -136,3 +136,45 @@ export const Castling: MoveValidator = (from, to, state) => {
     }
     return results;
 }
+
+export const HolyHell: MoveValidator = (from, to, state) => {
+    const {distX, distY} = getPawnDistance(from, to, state.activeSide);
+    const passed = {
+        row: from.row,
+        col: to.col,
+    };
+
+    if (Math.abs(distX) !== 1 || distY !== 1) {
+        // Have to move diagonally
+        return [];
+    }
+
+    const passedPiece = state.pieces.find((piece) => sameSquare({row: piece.row, col: piece.col}, passed));
+    if (passedPiece === undefined || passedPiece.pieceType !== "pawn") {
+        // Can only en passant pawns :(
+        return [];
+    }
+
+    const lastMove = state.history.reverse().find((result) => result.type === ResultType.Move) as MoveResult;
+    // Reverse is in place, so we have to revert the reversing
+    // TODO Get findLast to work
+    state.history.reverse();
+
+    if (!sameSquare(lastMove.to, passed)) {
+        // Last move must be to the passed square
+        return [];
+    }
+
+    if (lastMove.from.row !== 2 && lastMove.from.row !== 7) {
+        // Last move must come from one of the starting pawn rows
+        // Because pawns should only move in one direction, we don't care which one
+        return [];
+    }
+
+    if (Math.abs(lastMove.from.row - lastMove.to.row) <= 1) {
+        // Last move must have been at least two squares
+        return [];
+    }
+
+    return [new CaptureResult(passed), new MoveResult(from, to), new EndTurnResult()];
+}

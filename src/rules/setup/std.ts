@@ -2,7 +2,7 @@ import {TPiece, PieceType, Side} from "../../model/types";
 import {activeSide, attackedSquare, emptyPath, occupiedAlly, onField, standardMove} from "../validators/util";
 import {
     BishopCondition,
-    Castling,
+    Castling, HolyHell,
     HowDoesItMoveCondition,
     KingCondition,
     Pawn,
@@ -25,7 +25,7 @@ function getValidatorsPos(piece: PieceType) {
             validatorsPos.push(standardMove(KingCondition), Castling);
             break;
         case "pawn":
-            validatorsPos.push(Pawn, PawnCapture);
+            validatorsPos.push(Pawn, PawnCapture, HolyHell);
             break;
         case "queen":
             validatorsPos.push(standardMove(every(some(RookCondition, BishopCondition), emptyPath)));
