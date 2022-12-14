@@ -1,5 +1,7 @@
-import {CaptureResult, EndTurnResult, MoveResult} from "../../model/results";
-import {MoveCondition, MoveValidator} from "../../model/moves";
+import {CaptureResult, EndTurnResult, MoveResult, ResultType} from "../../model/results";
+import {doMove, MoveCondition, MoveValidator} from "../../model/moves";
+import {always} from "./modifiers";
+import {Side} from "../../model/types";
 
 export const standardMove = (condition: MoveCondition) => {
     const validator: MoveValidator = (from, to, state) => {
@@ -64,4 +66,30 @@ export const emptyPath: MoveCondition = (from, to, state) => {
         square.col += incCol;
     }
     return true;
+}
+
+export const activeSide = (side: Side): MoveCondition => {
+    return (_from, _to, state) => {
+        return state.activeSide === side;
+    };
+}
+
+export const attackedSquare: MoveCondition = (from, to, state) => {
+    const updates = standardMove(always)(from, to, state);
+    let newState = state;
+    for (const update of updates) {
+        newState = update.apply(newState);
+    }
+    for (const piece of newState.pieces) {
+        const validatorsPos = piece.validatorsPos;
+        let validatorsNeg = piece.validatorsNeg;
+        // Make sure, that we can't move next to another king if we are protected by another piece
+        validatorsNeg = validatorsNeg.filter((validator) => validator !== attackedSquare);
+
+        const possibleUpdates = doMove({row: piece.row, col: piece.col}, to, newState, validatorsPos, validatorsNeg);
+        if (possibleUpdates.findIndex((update) => update.type === ResultType.Capture) !== -1) {
+            return true;
+        }
+    }
+    return false;
 }

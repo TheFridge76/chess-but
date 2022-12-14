@@ -1,6 +1,6 @@
 import {sameSquare, Side, Square} from "../../model/types";
 import {CaptureResult, EndTurnResult, MoveResult, ResultType} from "../../model/results";
-import {emptyPath, occupied, occupiedOpponent, standardMove} from "./util";
+import {attackedSquare, emptyPath, occupied, occupiedOpponent, standardMove} from "./util";
 import {MoveCondition, MoveValidator} from "../../model/moves";
 
 export const KingCondition: MoveCondition = (from, to, _state) => {
@@ -71,7 +71,6 @@ export const PawnCapture: MoveValidator = (from, to, state) => {
 }
 
 export const Castling: MoveValidator = (from, to, state) => {
-    //TODO Cant move through check
     const short = {row: from.row, col: 8};
     const long = {row: from.row, col: 1};
     let partner: Square;
@@ -95,8 +94,20 @@ export const Castling: MoveValidator = (from, to, state) => {
         return [];
     }
 
+    const results = [new MoveResult(from, to), new MoveResult(partner, partnerTo), new EndTurnResult()];
+
     if (!emptyPath(from, partner, state)) {
         // Path from king to partner is not empty
+        return [];
+    }
+
+    let newState = state;
+    for (const result of results) {
+        newState = result.apply(newState);
+    }
+
+    if (attackedSquare(from, from, state) || attackedSquare(from, partnerTo, state) || attackedSquare(to, to, newState)) {
+        // Can't castle from, through or into check
         return [];
     }
 
@@ -123,5 +134,5 @@ export const Castling: MoveValidator = (from, to, state) => {
                 break;
         }
     }
-    return [new MoveResult(from, to), new MoveResult(partner, partnerTo), new EndTurnResult()];
+    return results;
 }

@@ -1,5 +1,5 @@
 import {TPiece, PieceType, Side} from "../../model/types";
-import {emptyPath, occupiedAlly, onField, standardMove} from "../validators/util";
+import {activeSide, attackedSquare, emptyPath, occupiedAlly, onField, standardMove} from "../validators/util";
 import {
     BishopCondition,
     Castling,
@@ -37,15 +37,24 @@ function getValidatorsPos(piece: PieceType) {
     return validatorsPos;
 }
 
+function getValidatorsNeg(piece: PieceType, side: Side) {
+    const validatorsNeg = [negate(activeSide(side)), negate(onField), occupiedAlly];
+    switch(piece) {
+        case "king":
+            validatorsNeg.push(attackedSquare);
+            break;
+    }
+    return validatorsNeg;
+}
+
 export function defaultPieces() {
     const backRow: PieceType[] = ["rook", "horsey", "bishop", "queen", "king", "bishop", "horsey", "rook"];
     const frontRow: PieceType[] = ["pawn", "pawn", "pawn", "pawn", "pawn", "pawn", "pawn", "pawn"];
 
-    const validatorsNeg = [negate(onField), occupiedAlly];
-
     const pieces: TPiece[] = [];
     backRow.forEach((piece, index) => {
         const validatorsPos = getValidatorsPos(piece);
+        const validatorsNeg = getValidatorsNeg(piece, Side.White);
         pieces.push({
             row: 1,
             col: index + 1,
@@ -57,6 +66,7 @@ export function defaultPieces() {
     });
     frontRow.forEach((piece, index) => {
         const validatorsPos = getValidatorsPos(piece);
+        const validatorsNeg = getValidatorsNeg(piece, Side.White);
         pieces.push({
             row: 2,
             col: index + 1,
@@ -68,6 +78,7 @@ export function defaultPieces() {
     });
     backRow.forEach((piece, index) => {
         const validatorsPos = getValidatorsPos(piece);
+        const validatorsNeg = getValidatorsNeg(piece, Side.Black);
         pieces.push({
             row: 8,
             col: index + 1,
@@ -79,6 +90,7 @@ export function defaultPieces() {
     });
     frontRow.forEach((piece, index) => {
         const validatorsPos = getValidatorsPos(piece);
+        const validatorsNeg = getValidatorsNeg(piece, Side.Black);
         pieces.push({
             row: 7,
             col: index + 1,
