@@ -1,4 +1,4 @@
-import {MoveValidator, TPiece, PieceType, Side} from "../../model/types";
+import {TPiece, PieceType, Side} from "../../model/types";
 import {emptyPath, occupiedAlly, onField, standardMove} from "../validators/util";
 import {
     BishopCondition,
@@ -10,6 +10,7 @@ import {
     RookCondition
 } from "../validators/std";
 import {every, negate, some} from "../validators/modifiers";
+import {MoveValidator} from "../../model/moves";
 
 function getValidatorsPos(piece: PieceType) {
     const validatorsPos: MoveValidator[] = [];
@@ -40,7 +41,7 @@ export function defaultPieces() {
     const backRow: PieceType[] = ["rook", "horsey", "bishop", "queen", "king", "bishop", "horsey", "rook"];
     const frontRow: PieceType[] = ["pawn", "pawn", "pawn", "pawn", "pawn", "pawn", "pawn", "pawn"];
 
-    const validatorsNeg = [standardMove(negate(onField)), standardMove(occupiedAlly)];
+    const validatorsNeg = [negate(onField), occupiedAlly];
 
     const pieces: TPiece[] = [];
     backRow.forEach((piece, index) => {

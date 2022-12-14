@@ -1,4 +1,4 @@
-import {MoveCondition} from "../../model/types";
+import {MoveCondition} from "../../model/moves";
 
 export function negate(condition: MoveCondition): MoveCondition {
     return (from, to, state) => {

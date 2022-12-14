@@ -1,5 +1,4 @@
-import {Result} from "./results";
-import {GameState} from "./state";
+import {MoveCondition, MoveValidator} from "./moves";
 
 export type Square = {
     row: number,
@@ -23,7 +22,7 @@ export type TPiece = {
     row: number,
     col: number,
     validatorsPos: MoveValidator[],
-    validatorsNeg: MoveValidator[],
+    validatorsNeg: MoveCondition[],
 };
 
 export function clonePiece(piece: TPiece): TPiece {
@@ -37,5 +36,3 @@ export function clonePiece(piece: TPiece): TPiece {
     };
 }
 
-export type MoveCondition = (from: Square, to: Square, state: GameState) => boolean;
-export type MoveValidator = (from: Square, to: Square, state: GameState) => Result[];

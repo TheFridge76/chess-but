@@ -1,5 +1,5 @@
-import {MoveValidator, MoveCondition} from "../../model/types";
 import {CaptureResult, EndTurnResult, MoveResult} from "../../model/results";
+import {MoveCondition, MoveValidator} from "../../model/moves";
 
 export const standardMove = (condition: MoveCondition) => {
     const validator: MoveValidator = (from, to, state) => {

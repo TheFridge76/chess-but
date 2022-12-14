@@ -1,9 +1,10 @@
 import styles from "../style/pieces.module.css"
 import React, {useContext, useEffect, useMemo, useReducer} from "react";
-import {MoveValidator, TPiece} from "../model/types";
+import {TPiece} from "../model/types";
 import {StateContext} from "./Game";
 import {MoveResult, Result, ResultType} from "../model/results";
 import {GameState, StateUpdater} from "../model/state";
+import {doMove, MoveCondition, MoveValidator} from "../model/moves";
 
 function touchToMouse(e: React.TouchEvent | TouchEvent, handler: (e: React.Touch | Touch) => void) {
     if (e.touches.length === 1) {
@@ -32,7 +33,7 @@ function reducer(state: PieceState, action: {
         e?: React.MouseEvent | MouseEvent | React.Touch | Touch,
         gameState?: GameState,
         validatorsPos?: MoveValidator[],
-        validatorsNeg?: MoveValidator[],
+        validatorsNeg?: MoveCondition[],
     },
 }) {
     switch (action.type) {
@@ -67,24 +68,9 @@ function reducer(state: PieceState, action: {
 
             const gameState = action.payload.gameState as GameState;
             const validatorsPos = action.payload.validatorsPos as MoveValidator[];
-            const validatorsNeg = action.payload.validatorsNeg as MoveValidator[];
+            const validatorsNeg = action.payload.validatorsNeg as MoveCondition[];
 
-            let updates = [];
-
-            for (const validator of validatorsPos) {
-                const results = validator(from, to, gameState);
-                if (results.length > 0) {
-                    updates.push(...results);
-                    break;
-                }
-            }
-            for (const validator of validatorsNeg) {
-                if (validator(from, to, gameState).length !== 0) {
-                    updates = [];
-                    break;
-                }
-            }
-
+            const updates = doMove(from, to, gameState, validatorsPos, validatorsNeg);
             const move = updates.find((update) => update.type === ResultType.Move) as MoveResult;
             return {
                 dragging: false,

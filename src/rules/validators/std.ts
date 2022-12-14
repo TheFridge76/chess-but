@@ -1,6 +1,7 @@
-import {MoveValidator, sameSquare, Side, Square, MoveCondition} from "../../model/types";
+import {sameSquare, Side, Square} from "../../model/types";
 import {CaptureResult, EndTurnResult, MoveResult, ResultType} from "../../model/results";
 import {emptyPath, occupied, occupiedOpponent, standardMove} from "./util";
+import {MoveCondition, MoveValidator} from "../../model/moves";
 
 export const KingCondition: MoveCondition = (from, to, _state) => {
     const distY = Math.abs(from.row - to.row);
