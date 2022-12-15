@@ -14,7 +14,7 @@ import {
     HowDoesItMoveCondition,
     KingCondition,
     Pawn,
-    PawnCapture,
+    PawnCapture, Promotion,
     RookCondition
 } from "../validators/std";
 import {every, negate, some} from "../validators/modifiers";
@@ -33,7 +33,7 @@ function getValidatorsPos(piece: PieceType) {
             validatorsPos.push(standardMove(KingCondition), Castling);
             break;
         case "pawn":
-            validatorsPos.push(Pawn, PawnCapture, HolyHell);
+            validatorsPos.push(Pawn, PawnCapture, HolyHell, Promotion);
             break;
         case "queen":
             validatorsPos.push(standardMove(every(some(RookCondition, BishopCondition), emptyPath)));

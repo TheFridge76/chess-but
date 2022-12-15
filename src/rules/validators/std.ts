@@ -1,5 +1,5 @@
 import {sameSquare, Side, Square} from "../../model/types";
-import {CaptureResult, EndTurnResult, MoveResult, ResultType} from "../../model/results";
+import {CaptureResult, EndTurnResult, MoveResult, PromotionResult, ResultType} from "../../model/results";
 import {attackedSquare, emptyPath, occupied, occupiedOpponent, standardMove} from "./util";
 import {MoveCondition, MoveValidator} from "../../model/moves";
 
@@ -181,4 +181,17 @@ export const HolyHell: MoveValidator = (from, to, state) => {
     }
 
     return [new CaptureResult(passed), new MoveResult(from, to), new EndTurnResult()];
+}
+
+export const Promotion: MoveValidator = (_from, to, state) => {
+    let virtualTo;
+    switch (state.activeSide) {
+        case Side.White:
+            virtualTo = to;
+            break;
+        case Side.Black:
+            virtualTo = flip(to);
+            break;
+    }
+    return virtualTo.row === 8 ? [new PromotionResult(to)] : [];
 }

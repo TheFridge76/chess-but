@@ -5,6 +5,7 @@ export enum ResultType {
     Move,
     Capture,
     EndTurn,
+    Promotion,
 }
 
 function makeNewState(state: GameState, action: Result) {
@@ -16,12 +17,11 @@ function makeNewState(state: GameState, action: Result) {
 }
 
 export class MoveResult implements Result {
-    type: ResultType;
+    type = ResultType.Move;
     from: Square;
     to: Square;
 
     constructor(from: Square, to: Square) {
-        this.type = ResultType.Move;
         this.from = from;
         this.to = to;
     }
@@ -36,19 +36,16 @@ export class MoveResult implements Result {
             }
             return clone;
         });
-
-        // TODO Check for promotion
-
         return newState;
     }
 }
 
 export class CaptureResult implements Result {
-    type: ResultType;
+    type = ResultType.Capture;
     on: Square;
 
     constructor(on: Square) {
-        this.type = ResultType.Capture;
+        this.type ;
         this.on = on;
     }
 
@@ -62,11 +59,9 @@ export class CaptureResult implements Result {
 }
 
 export class EndTurnResult implements Result {
-    type: ResultType;
+    type = ResultType.EndTurn;
 
-    constructor() {
-        this.type = ResultType.EndTurn;
-    }
+    constructor() {}
 
     apply(state: GameState): GameState {
         const newState = makeNewState(state, this);
@@ -78,6 +73,21 @@ export class EndTurnResult implements Result {
                 newState.activeSide = Side.White;
                 break;
         }
+        return newState;
+    }
+}
+
+export class PromotionResult implements Result {
+    type = ResultType.Promotion;
+    on: Square;
+
+    constructor(on: Square) {
+        this.on = on;
+    }
+
+    apply(state: GameState): GameState {
+        const newState = makeNewState(state, this);
+        console.log("Promoted!");
         return newState;
     }
 }
