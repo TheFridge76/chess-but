@@ -159,6 +159,10 @@ export const HolyHell: MoveValidator = (from, to, state) => {
     // Reverse is in place, so we have to revert the reversing
     // TODO Get findLast to work
     state.history.reverse();
+    if (lastMove === undefined) {
+        // No piece has moved yet
+        return [];
+    }
 
     if (!sameSquare(lastMove.to, passed)) {
         // Last move must be to the passed square

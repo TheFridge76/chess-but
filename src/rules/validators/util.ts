@@ -1,7 +1,7 @@
 import {CaptureResult, EndTurnResult, MoveResult, ResultType} from "../../model/results";
 import {doMove, MoveCondition, MoveValidator} from "../../model/moves";
 import {always} from "./modifiers";
-import {Side} from "../../model/types";
+import {sameSquare, Side} from "../../model/types";
 
 export const standardMove = (condition: MoveCondition) => {
     const validator: MoveValidator = (from, to, state) => {
@@ -74,6 +74,7 @@ export const activeSide = (side: Side): MoveCondition => {
     };
 }
 
+// TODO Create function that returns an attackedSquare function for a given side
 export const attackedSquare: MoveCondition = (from, to, state) => {
     const updates = standardMove(always)(from, to, state);
     let newState = state;
@@ -92,4 +93,31 @@ export const attackedSquare: MoveCondition = (from, to, state) => {
         }
     }
     return false;
+}
+
+export const kingAttacked: MoveCondition = (from, to, state) => {
+    const king = state.pieces.find((piece) => piece.pieceType === "king" && piece.color === state.activeSide);
+    if (king === undefined) {
+        return false;
+    }
+
+    const piece = state.pieces.find((piece) => sameSquare({row: piece.row, col: piece.col}, from));
+    if (piece === undefined) {
+        return false;
+    }
+
+    let newState = state;
+    const attemptedUpdates = doMove(from, to, newState,
+        piece.validatorsPos, piece.validatorsNeg.filter((condition) => condition !== kingAttacked));
+    for (const update of attemptedUpdates) {
+        newState = update.apply(newState);
+    }
+    // TODO Temporary: Change side back
+    newState = new EndTurnResult().apply(newState);
+    newState.pieces.forEach((piece) => {
+        piece.validatorsNeg = piece.validatorsNeg.filter((condition) => condition !== kingAttacked);
+    });
+
+    const kingSquare = {row: king.row, col: king.col};
+    return attackedSquare(kingSquare, kingSquare, newState);
 }

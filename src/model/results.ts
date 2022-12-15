@@ -36,6 +36,9 @@ export class MoveResult implements Result {
             }
             return clone;
         });
+
+        // TODO Check for promotion
+
         return newState;
     }
 }

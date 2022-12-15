@@ -1,5 +1,13 @@
 import {TPiece, PieceType, Side} from "../../model/types";
-import {activeSide, attackedSquare, emptyPath, occupiedAlly, onField, standardMove} from "../validators/util";
+import {
+    activeSide,
+    attackedSquare,
+    emptyPath,
+    kingAttacked,
+    occupiedAlly,
+    onField,
+    standardMove
+} from "../validators/util";
 import {
     BishopCondition,
     Castling, HolyHell,
@@ -38,7 +46,7 @@ function getValidatorsPos(piece: PieceType) {
 }
 
 function getValidatorsNeg(piece: PieceType, side: Side) {
-    const validatorsNeg = [negate(activeSide(side)), negate(onField), occupiedAlly];
+    const validatorsNeg = [negate(activeSide(side)), negate(onField), occupiedAlly, kingAttacked];
     switch(piece) {
         case "king":
             validatorsNeg.push(attackedSquare);
