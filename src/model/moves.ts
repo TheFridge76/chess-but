@@ -3,23 +3,36 @@ import {Result} from "./results";
 import {Square} from "./types";
 
 export type MoveCondition = (from: Square, to: Square, state: GameState) => boolean;
-export type MoveValidator = (from: Square, to: Square, state: GameState) => Result[];
+type MoveConditionReturn = ReturnType<MoveCondition>;
+export type MoveExecutor = (from: Square, to: Square, state: GameState) => Result[];
+type MoveExecutorReturn = ReturnType<MoveExecutor>;
+export type MoveValidator = MoveCondition | MoveExecutor;
 
+function isConditionReturn(result: MoveConditionReturn | MoveExecutorReturn): result is MoveConditionReturn {
+    return typeof result === 'boolean';
+}
+
+let recursionDepth = 0;
 export function doMove(from: Square, to: Square, state: GameState,
-                       validatorsPos: MoveValidator[], validatorsNeg: MoveCondition[]): Result[] {
+                       validators: MoveValidator[], maxRecursion: number = 1): Result[] {
+    if (recursionDepth++ > maxRecursion) {
+        recursionDepth--;
+        return [];
+    }
     let updates = [];
-    for (const validator of validatorsPos) {
+    for (let validator of validators) {
         const results = validator(from, to, state);
-        if (results.length > 0) {
-            updates.push(...results);
-            break;
+        if (isConditionReturn(results)) {
+            if (!results) {
+                updates = [];
+                break;
+            }
+        } else {
+            if (results.length > 0) {
+                updates.push(...results);
+            }
         }
     }
-    for (const validator of validatorsNeg) {
-        if (validator(from, to, state)) {
-            updates = [];
-            break;
-        }
-    }
+    recursionDepth--;
     return updates;
 }

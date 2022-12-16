@@ -25,8 +25,7 @@ function Board(props: BoardProps) {
                     col={piece.col}
                     color={piece.color}
                     pieceType={piece.pieceType}
-                    validatorsPos={piece.validatorsPos}
-                    validatorsNeg={piece.validatorsNeg}
+                    validators={piece.validators}
                     updateState={props.updateState}
                 />
             })}

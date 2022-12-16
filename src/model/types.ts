@@ -1,4 +1,4 @@
-import {MoveCondition, MoveValidator} from "./moves";
+import {MoveValidator} from "./moves";
 
 export type Square = {
     row: number,
@@ -21,8 +21,7 @@ export type TPiece = {
     color: Side,
     row: number,
     col: number,
-    validatorsPos: MoveValidator[],
-    validatorsNeg: MoveCondition[],
+    validators: MoveValidator[],
 };
 
 export function clonePiece(piece: TPiece): TPiece {
@@ -31,8 +30,7 @@ export function clonePiece(piece: TPiece): TPiece {
         color: piece.color,
         row: piece.row,
         col: piece.col,
-        validatorsPos: piece.validatorsPos,
-        validatorsNeg: piece.validatorsNeg,
+        validators: piece.validators,
     };
 }
 

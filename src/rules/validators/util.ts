@@ -82,12 +82,9 @@ export const attackedSquare: MoveCondition = (from, to, state) => {
         newState = update.apply(newState);
     }
     for (const piece of newState.pieces) {
-        const validatorsPos = piece.validatorsPos;
-        let validatorsNeg = piece.validatorsNeg;
-        // Make sure, that we can't move next to another king if we are protected by another piece
-        validatorsNeg = validatorsNeg.filter((validator) => validator !== attackedSquare);
+        const validators = piece.validators;
 
-        const possibleUpdates = doMove({row: piece.row, col: piece.col}, to, newState, validatorsPos, validatorsNeg);
+        const possibleUpdates = doMove({row: piece.row, col: piece.col}, to, newState, validators);
         if (possibleUpdates.findIndex((update) => update.type === ResultType.Capture) !== -1) {
             return true;
         }
@@ -107,16 +104,16 @@ export const kingAttacked: MoveCondition = (from, to, state) => {
     }
 
     let newState = state;
-    const attemptedUpdates = doMove(from, to, newState,
-        piece.validatorsPos, piece.validatorsNeg.filter((condition) => condition !== kingAttacked));
+    const attemptedUpdates = doMove(from, to, newState, piece.validators);
+    if (attemptedUpdates.length === 0) {
+        return false;
+    }
+
     for (const update of attemptedUpdates) {
         newState = update.apply(newState);
     }
     // TODO Temporary: Change side back
     newState = new EndTurnResult().apply(newState);
-    newState.pieces.forEach((piece) => {
-        piece.validatorsNeg = piece.validatorsNeg.filter((condition) => condition !== kingAttacked);
-    });
 
     const kingSquare = {row: king.row, col: king.col};
     return attackedSquare(kingSquare, kingSquare, newState);

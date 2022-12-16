@@ -20,39 +20,29 @@ import {
 import {every, negate, some} from "../validators/modifiers";
 import {MoveValidator} from "../../model/moves";
 
-function getValidatorsPos(piece: PieceType) {
-    const validatorsPos: MoveValidator[] = [];
+function getValidators(piece: PieceType, side: Side) {
+    const validators: MoveValidator[] = [activeSide(side), onField, negate(occupiedAlly), negate(kingAttacked)];
     switch(piece) {
         case "horsey":
-            validatorsPos.push(standardMove(HowDoesItMoveCondition));
+            validators.push(standardMove(HowDoesItMoveCondition));
             break;
         case "bishop":
-            validatorsPos.push(standardMove(every(BishopCondition, emptyPath)));
+            validators.push(standardMove(every(BishopCondition, emptyPath)));
             break;
         case "king":
-            validatorsPos.push(standardMove(KingCondition), Castling);
+            validators.push(standardMove(KingCondition), Castling, negate(attackedSquare));
             break;
         case "pawn":
-            validatorsPos.push(Pawn, PawnCapture, HolyHell, Promotion);
+            validators.push(Pawn, PawnCapture, HolyHell, Promotion);
             break;
         case "queen":
-            validatorsPos.push(standardMove(every(some(RookCondition, BishopCondition), emptyPath)));
+            validators.push(standardMove(every(some(RookCondition, BishopCondition), emptyPath)));
             break;
         case "rook":
-            validatorsPos.push(standardMove(every(RookCondition, emptyPath)));
+            validators.push(standardMove(every(RookCondition, emptyPath)));
             break;
     }
-    return validatorsPos;
-}
-
-function getValidatorsNeg(piece: PieceType, side: Side) {
-    const validatorsNeg = [negate(activeSide(side)), negate(onField), occupiedAlly, kingAttacked];
-    switch(piece) {
-        case "king":
-            validatorsNeg.push(attackedSquare);
-            break;
-    }
-    return validatorsNeg;
+    return validators;
 }
 
 export function defaultPieces() {
@@ -61,51 +51,43 @@ export function defaultPieces() {
 
     const pieces: TPiece[] = [];
     backRow.forEach((piece, index) => {
-        const validatorsPos = getValidatorsPos(piece);
-        const validatorsNeg = getValidatorsNeg(piece, Side.White);
+        const validators = getValidators(piece, Side.White);
         pieces.push({
             row: 1,
             col: index + 1,
             color: Side.White,
             pieceType: piece,
-            validatorsPos: validatorsPos,
-            validatorsNeg: validatorsNeg,
+            validators: validators,
         });
     });
     frontRow.forEach((piece, index) => {
-        const validatorsPos = getValidatorsPos(piece);
-        const validatorsNeg = getValidatorsNeg(piece, Side.White);
+        const validators = getValidators(piece, Side.White);
         pieces.push({
             row: 2,
             col: index + 1,
             color: Side.White,
             pieceType: piece,
-            validatorsPos: validatorsPos,
-            validatorsNeg: validatorsNeg,
+            validators: validators,
         });
     });
     backRow.forEach((piece, index) => {
-        const validatorsPos = getValidatorsPos(piece);
-        const validatorsNeg = getValidatorsNeg(piece, Side.Black);
+        const validators = getValidators(piece, Side.Black);
         pieces.push({
             row: 8,
             col: index + 1,
             color: Side.Black,
             pieceType: piece,
-            validatorsPos: validatorsPos,
-            validatorsNeg: validatorsNeg,
+            validators: validators,
         });
     });
     frontRow.forEach((piece, index) => {
-        const validatorsPos = getValidatorsPos(piece);
-        const validatorsNeg = getValidatorsNeg(piece, Side.Black);
+        const validators = getValidators(piece, Side.Black);
         pieces.push({
             row: 7,
             col: index + 1,
             color: Side.Black,
             pieceType: piece,
-            validatorsPos: validatorsPos,
-            validatorsNeg: validatorsNeg,
+            validators: validators,
         });
     });
     return pieces;

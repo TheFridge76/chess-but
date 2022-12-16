@@ -4,7 +4,7 @@ import {TPiece} from "../model/types";
 import {StateContext} from "./Game";
 import {MoveResult, Result, ResultType} from "../model/results";
 import {GameState, StateUpdater} from "../model/state";
-import {doMove, MoveCondition, MoveValidator} from "../model/moves";
+import {doMove, MoveValidator} from "../model/moves";
 
 function touchToMouse(e: React.TouchEvent | TouchEvent, handler: (e: React.Touch | Touch) => void) {
     if (e.touches.length === 1) {
@@ -32,8 +32,7 @@ function reducer(state: PieceState, action: {
     payload: {
         e?: React.MouseEvent | MouseEvent | React.Touch | Touch,
         gameState?: GameState,
-        validatorsPos?: MoveValidator[],
-        validatorsNeg?: MoveCondition[],
+        validators?: MoveValidator[],
     },
 }) {
     switch (action.type) {
@@ -67,10 +66,9 @@ function reducer(state: PieceState, action: {
             };
 
             const gameState = action.payload.gameState as GameState;
-            const validatorsPos = action.payload.validatorsPos as MoveValidator[];
-            const validatorsNeg = action.payload.validatorsNeg as MoveCondition[];
+            const validators = action.payload.validators as MoveValidator[];
 
-            const updates = doMove(from, to, gameState, validatorsPos, validatorsNeg);
+            const updates = doMove(from, to, gameState, validators);
             const move = updates.find((update) => update.type === ResultType.Move) as MoveResult;
             return {
                 dragging: false,
@@ -126,8 +124,7 @@ export function Piece(props: PieceProps & TPiece) {
                 type: "drop",
                 payload: {
                     gameState: gameState,
-                    validatorsPos: props.validatorsPos,
-                    validatorsNeg: props.validatorsNeg,
+                    validators: props.validators,
                 }
             });
 
@@ -142,7 +139,7 @@ export function Piece(props: PieceProps & TPiece) {
                 window.removeEventListener("touchend", drop);
             };
         }
-    }, [state.dragging, gameState, props.validatorsPos, props.validatorsNeg]);
+    }, [state.dragging, gameState, props.validators]);
 
     useEffect(() => {
         for (const update of state.updates) {

@@ -45,7 +45,6 @@ export class CaptureResult implements Result {
     on: Square;
 
     constructor(on: Square) {
-        this.type ;
         this.on = on;
     }
 
@@ -60,8 +59,6 @@ export class CaptureResult implements Result {
 
 export class EndTurnResult implements Result {
     type = ResultType.EndTurn;
-
-    constructor() {}
 
     apply(state: GameState): GameState {
         const newState = makeNewState(state, this);
