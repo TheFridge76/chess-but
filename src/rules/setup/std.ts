@@ -21,25 +21,26 @@ import {every, negate, some} from "../validators/modifiers";
 import {MoveValidator} from "../../model/moves";
 
 function getValidators(piece: PieceType, side: Side) {
-    const validators: MoveValidator[] = [activeSide(side), onField, negate(occupiedAlly), negate(kingAttacked)];
+    const validators: MoveValidator[][] = [[activeSide(side), onField, negate(occupiedAlly), negate(kingAttacked)]];
     switch(piece) {
         case "horsey":
-            validators.push(standardMove(HowDoesItMoveCondition));
+            validators[0].push(standardMove(HowDoesItMoveCondition));
             break;
         case "bishop":
-            validators.push(standardMove(every(BishopCondition, emptyPath)));
+            validators[0].push(standardMove(every(BishopCondition, emptyPath)));
             break;
         case "king":
-            validators.push(standardMove(KingCondition), Castling, negate(attackedSquare));
+            validators[0].push(standardMove(KingCondition), Castling, negate(attackedSquare));
             break;
         case "pawn":
-            validators.push(Pawn, PawnCapture, HolyHell, Promotion);
+            validators[0].push(Pawn, PawnCapture, HolyHell);
+            validators.push([Promotion]);
             break;
         case "queen":
-            validators.push(standardMove(every(some(RookCondition, BishopCondition), emptyPath)));
+            validators[0].push(standardMove(every(some(RookCondition, BishopCondition), emptyPath)));
             break;
         case "rook":
-            validators.push(standardMove(every(RookCondition, emptyPath)));
+            validators[0].push(standardMove(every(RookCondition, emptyPath)));
             break;
     }
     return validators;

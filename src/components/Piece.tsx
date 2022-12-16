@@ -32,7 +32,7 @@ function reducer(state: PieceState, action: {
     payload: {
         e?: React.MouseEvent | MouseEvent | React.Touch | Touch,
         gameState?: GameState,
-        validators?: MoveValidator[],
+        validators?: MoveValidator[][],
     },
 }) {
     switch (action.type) {
@@ -66,7 +66,7 @@ function reducer(state: PieceState, action: {
             };
 
             const gameState = action.payload.gameState as GameState;
-            const validators = action.payload.validators as MoveValidator[];
+            const validators = action.payload.validators as MoveValidator[][];
 
             const updates = doMove(from, to, gameState, validators);
             const move = updates.find((update) => update.type === ResultType.Move) as MoveResult;

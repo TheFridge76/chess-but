@@ -14,23 +14,28 @@ function isConditionReturn(result: MoveConditionReturn | MoveExecutorReturn): re
 
 let recursionDepth = 0;
 export function doMove(from: Square, to: Square, state: GameState,
-                       validators: MoveValidator[], maxRecursion: number = 1): Result[] {
+                       validators: MoveValidator[][], maxRecursion: number = 1): Result[] {
     if (recursionDepth++ > maxRecursion) {
         recursionDepth--;
         return [];
     }
     let updates = [];
-    for (let validator of validators) {
-        const results = validator(from, to, state);
-        if (isConditionReturn(results)) {
-            if (!results) {
-                updates = [];
-                break;
+    for (let validatorStage of validators) {
+        for (let validator of validatorStage) {
+            const results = validator(from, to, state);
+            if (isConditionReturn(results)) {
+                if (!results) {
+                    updates = [];
+                    break;
+                }
+            } else {
+                if (results.length > 0) {
+                    updates.push(...results);
+                }
             }
-        } else {
-            if (results.length > 0) {
-                updates.push(...results);
-            }
+        }
+        if (updates.length === 0) {
+            break;
         }
     }
     recursionDepth--;

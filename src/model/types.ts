@@ -21,7 +21,7 @@ export type TPiece = {
     color: Side,
     row: number,
     col: number,
-    validators: MoveValidator[],
+    validators: MoveValidator[][],
 };
 
 export function clonePiece(piece: TPiece): TPiece {
