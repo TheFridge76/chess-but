@@ -1,5 +1,5 @@
 import {clonePiece, Side, Square} from "./types";
-import {GameState} from "./state";
+import {GamePhase, GameState} from "./state";
 
 export enum ResultType {
     Move,
@@ -11,6 +11,7 @@ export enum ResultType {
 function makeNewState(state: GameState, action: Result) {
     return {
         activeSide: state.activeSide,
+        phase: state.phase,
         pieces: state.pieces,
         history: [...state.history, action],
     };
@@ -84,7 +85,7 @@ export class PromotionResult implements Result {
 
     apply(state: GameState): GameState {
         const newState = makeNewState(state, this);
-        console.log("Promoted!");
+        newState.phase = GamePhase.Promotion;
         return newState;
     }
 }

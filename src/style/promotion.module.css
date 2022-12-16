@@ -1,0 +1,10 @@
+.header {
+    grid-column-start: 1;
+    grid-column-end: -1;
+    color: aliceblue;
+    text-shadow: 0 0 3px black, 0 0 3px black, 0 0 3px black, 0 0 3px black;
+}
+
+.background {
+    backdrop-filter: blur(2px) brightness(50%);
+}
