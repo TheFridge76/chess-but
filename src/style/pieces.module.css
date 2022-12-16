@@ -2,12 +2,11 @@
 }
 
 .piece {
+    height: 100%;
+    width: 100%;
+
     background-size: contain;
     background-repeat: no-repeat;
-}
-
-.piece.dragging {
-    position: relative;
 }
 
 /* White */

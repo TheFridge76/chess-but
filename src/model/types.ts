@@ -16,13 +16,16 @@ export enum Side {
 
 export type PieceType = "pawn" | "rook" | "horsey" | "bishop" | "queen" | "king";
 
-export type TPiece = {
+export type TPieceStatic = {
     pieceType: PieceType,
     color: Side,
+}
+export type TPieceDynamic = {
     row: number,
     col: number,
     validators: MoveValidator[][],
-};
+}
+export type TPiece = TPieceStatic & TPieceDynamic;
 
 export function clonePiece(piece: TPiece): TPiece {
     return {
