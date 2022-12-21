@@ -1,4 +1,4 @@
-import {clonePiece, Side, Square} from "./types";
+import {clonePiece, Side, Square, TPiece} from "./types";
 import {GamePhase, GameState} from "./state";
 
 export enum ResultType {
@@ -6,12 +6,13 @@ export enum ResultType {
     Capture,
     EndTurn,
     Promotion,
+    Replace,
 }
 
 function makeNewState(state: GameState, action: Result) {
     return {
         activeSide: state.activeSide,
-        phase: state.phase,
+        phase: structuredClone(state.phase),
         pieces: state.pieces,
         history: [...state.history, action],
     };
@@ -85,7 +86,31 @@ export class PromotionResult implements Result {
 
     apply(state: GameState): GameState {
         const newState = makeNewState(state, this);
-        newState.phase = GamePhase.Promotion;
+        newState.phase.type = GamePhase.Promotion;
+        newState.phase.data.on = this.on;
+        return newState;
+    }
+}
+
+export class ReplaceResult implements Result {
+    type = ResultType.Replace;
+    on: Square;
+    piece: TPiece;
+
+    constructor(on: Square, piece: TPiece) {
+        this.on = on;
+        this.piece = piece;
+    }
+
+    apply(state: GameState): GameState {
+        const newState = makeNewState(state, this);
+        newState.phase = GamePhase.Turn;
+        // Remove old piece
+        newState.pieces = state.pieces.filter((piece) => {
+            return piece.row !== this.on.row || piece.col !== this.on.col;
+        }).map((piece) => clonePiece(piece));
+        // Insert new piece
+        newState.pieces.push(this.piece);
         return newState;
     }
 }

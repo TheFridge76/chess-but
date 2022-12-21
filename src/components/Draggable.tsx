@@ -2,7 +2,7 @@ import styles from "../style/draggable.module.css"
 import React, {ReactNode, useEffect, useReducer} from "react";
 import {Square} from "../model/types";
 
-function touchToMouse(e: React.TouchEvent | TouchEvent, handler: (e: React.Touch | Touch) => void) {
+export function touchToMouse(e: React.TouchEvent | TouchEvent, handler: (e: React.Touch | Touch) => void) {
     if (e.touches.length === 1) {
         handler(e.touches[0]);
     }

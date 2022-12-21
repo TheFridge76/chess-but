@@ -9,7 +9,7 @@ import Promotion from "./Promotion";
 
 export const StateContext = React.createContext<GameState>({
     activeSide: Side.White,
-    phase: GamePhase.Turn,
+    phase: {type: GamePhase.Turn, data: {}},
     pieces: [],
     history: [],
 });
@@ -17,7 +17,7 @@ export const StateContext = React.createContext<GameState>({
 export default function Game() {
     const [state, dispatchState] = useReducer(updateState, {
         activeSide: Side.White,
-        phase: GamePhase.Turn,
+        phase: {type: GamePhase.Turn, data: {}},
         pieces: defaultPieces(),
         history: [],
     });
@@ -27,7 +27,7 @@ export default function Game() {
             <FieldContainer>
                 <Board/>
                 <PieceContainer updateState={dispatchState}/>
-                {state.phase === GamePhase.Promotion ? <Promotion updateState={dispatchState}/> : null}
+                {state.phase.type === GamePhase.Promotion ? <Promotion updateState={dispatchState} square={state.phase.data.on}/> : null}
             </FieldContainer>
         </StateContext.Provider>
     );

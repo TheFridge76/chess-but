@@ -1,5 +1,5 @@
 import {Result} from "./results";
-import {Side, TPiece} from "./types";
+import {Side, Square, TPiece} from "./types";
 import React from "react";
 
 export enum GamePhase {
@@ -9,10 +9,24 @@ export enum GamePhase {
 
 export type GameState = {
     activeSide: Side,
-    phase: GamePhase,
+    phase: PhaseState,
     pieces: TPiece[],
     history: Result[],
-}
+};
+
+type PhaseState = PhaseTurnState | PhasePromotionState;
+
+type PhaseTurnState = {
+    type: GamePhase.Turn,
+    data: {},
+};
+
+type PhasePromotionState = {
+    type: GamePhase.Promotion,
+    data: {
+        on: Square,
+    },
+};
 
 export type StateUpdater = React.Dispatch<Result>;
 
