@@ -79,15 +79,18 @@ export class EndTurnResult implements Result {
 export class PromotionResult implements Result {
     type = ResultType.Promotion;
     on: Square;
+    side: Side;
 
-    constructor(on: Square) {
+    constructor(on: Square, side: Side) {
         this.on = on;
+        this.side = side;
     }
 
     apply(state: GameState): GameState {
         const newState = makeNewState(state, this);
         newState.phase.type = GamePhase.Promotion;
         newState.phase.data.on = this.on;
+        newState.phase.data.side = this.side;
         return newState;
     }
 }

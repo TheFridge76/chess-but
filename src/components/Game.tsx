@@ -27,7 +27,9 @@ export default function Game() {
             <FieldContainer>
                 <Board/>
                 <PieceContainer updateState={dispatchState}/>
-                {state.phase.type === GamePhase.Promotion ? <Promotion updateState={dispatchState} square={state.phase.data.on}/> : null}
+                {state.phase.type === GamePhase.Promotion
+                    ? <Promotion updateState={dispatchState} square={state.phase.data.on} side={state.phase.data.side}/>
+                    : null}
             </FieldContainer>
         </StateContext.Provider>
     );

@@ -25,6 +25,7 @@ type PhasePromotionState = {
     type: GamePhase.Promotion,
     data: {
         on: Square,
+        side: Side,
     },
 };
 

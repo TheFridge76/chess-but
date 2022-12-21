@@ -183,7 +183,7 @@ export const HolyHell: MoveValidator = (from, to, state) => {
     return [new CaptureResult(passed), new MoveResult(from, to), new EndTurnResult()];
 }
 
-export const Promotion: MoveValidator = (_from, to, state) => {
+export const Promotion: (side: Side) => MoveValidator = (side: Side) => (_from, to, state) => {
     let virtualTo;
     switch (state.activeSide) {
         case Side.White:
@@ -193,5 +193,5 @@ export const Promotion: MoveValidator = (_from, to, state) => {
             virtualTo = flip(to);
             break;
     }
-    return virtualTo.row === 8 ? [new PromotionResult(to)] : [];
+    return virtualTo.row === 8 ? [new PromotionResult(to, side)] : [];
 }
