@@ -7,10 +7,10 @@ import Game from "./components/Game";
 function App() {
     return (
         <div className="App">
-            <h1>Chess, but <span className={styles.butText}>it's barely functional</span></h1>
+            <h1>Chess, but <span className={styles.butText}>it's completely normal</span></h1>
             <p>
-                You can move pieces around according to the most basic rules, but that's it.
-                No capturing, no checking, no castling and worst of all: no en passanting.
+                This is local chess with the normal chess rules.
+                Detecting checkmate is left as an exercise to the players.
             </p>
             <Game/>
             <div className={styles.footer}>
