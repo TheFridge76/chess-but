@@ -14,6 +14,10 @@ export const StateContext = React.createContext<GameState>({
     history: [],
 });
 
+export const BoardContext = React.createContext({
+    flipped: false,
+});
+
 export default function Game() {
     const [state, dispatchState] = useReducer(updateState, {
         activeSide: Side.White,
@@ -24,13 +28,15 @@ export default function Game() {
 
     return (
         <StateContext.Provider value={state}>
-            <FieldContainer>
-                <Board/>
-                <PieceContainer updateState={dispatchState}/>
-                {state.phase.type === GamePhase.Promotion
-                    ? <Promotion updateState={dispatchState} square={state.phase.data.on} side={state.phase.data.side}/>
-                    : null}
-            </FieldContainer>
+            <BoardContext.Provider value={{flipped: false}}>
+                <FieldContainer>
+                    <Board/>
+                    <PieceContainer updateState={dispatchState}/>
+                    {state.phase.type === GamePhase.Promotion
+                        ? <Promotion updateState={dispatchState} square={state.phase.data.on} side={state.phase.data.side}/>
+                        : null}
+                </FieldContainer>
+            </BoardContext.Provider>
         </StateContext.Provider>
     );
 }

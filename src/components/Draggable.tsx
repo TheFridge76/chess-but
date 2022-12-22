@@ -1,6 +1,7 @@
 import styles from "../style/draggable.module.css"
-import React, {ReactNode, useEffect, useReducer} from "react";
+import React, {ReactNode, useContext, useEffect, useReducer} from "react";
 import {Square} from "../model/types";
+import {BoardContext} from "./Game";
 
 export function touchToMouse(e: React.TouchEvent | TouchEvent, handler: (e: React.Touch | Touch) => void) {
     if (e.touches.length === 1) {
@@ -26,15 +27,24 @@ type PieceState = {
 };
 
 function reducer(state: PieceState, action: {
-    type: "drag" | "move" | "drop" | "clear",
+    type: "drag" | "move",
     payload: {
-        e?: React.MouseEvent | MouseEvent | React.Touch | Touch,
-        dropValidator?: DropValidator,
+        e: React.MouseEvent | MouseEvent | React.Touch | Touch,
+    },
+} | {
+    type: "drop",
+    payload: {
+        dropValidator: DropValidator,
+        flipped: boolean,
+    },
+} | {
+    type: "clear",
+    payload: {
     },
 }) {
     switch (action.type) {
         case "drag":
-            const eDrag = action.payload.e as React.MouseEvent | React.Touch;
+            const eDrag = action.payload.e;
             return {
                 dragging: true,
                 dragStart: {x: eDrag.clientX, y: eDrag.clientY},
@@ -42,7 +52,7 @@ function reducer(state: PieceState, action: {
                 square: {row: state.square.row, col: state.square.col},
             };
         case "move":
-            const eMove = action.payload.e as React.MouseEvent | React.Touch;
+            const eMove = action.payload.e;
             return {
                 dragging: true,
                 dragStart: {x: state.dragStart.x, y: state.dragStart.y},
@@ -55,13 +65,14 @@ function reducer(state: PieceState, action: {
                 row: state.square.row,
                 col: state.square.col,
             }
+            const squaresX = Math.round(offset.x / 80);
+            const squaresY = Math.round(offset.y / 80);
             const to = {
-                row: from.row + Math.round(offset.y / 80),
-                col: from.col + Math.round(offset.x / 80),
+                row: action.payload.flipped ? from.row + squaresY : from.row - squaresY,
+                col: action.payload.flipped ? from.col - squaresX : from.col + squaresX,
             };
 
-            const validator = action.payload.dropValidator as DropValidator;
-            const move = validator(from, to);
+            const move = action.payload.dropValidator(from, to);
 
             return {
                 dragging: false,
@@ -95,6 +106,8 @@ type DraggableProps = {
 };
 
 export function Draggable(props: DraggableProps) {
+    const boardState = useContext(BoardContext);
+
     const [state, dispatch] = useReducer(reducer, {
         dragging: false,
         dragStart: {x: 0, y: 0},
@@ -114,7 +127,7 @@ export function Draggable(props: DraggableProps) {
                 e.preventDefault();
                 touchToMouse(e, (e) => dispatch({type: "move", payload: {e: e}}));
             }
-            const drop = () => dispatch({type: "drop", payload: {dropValidator: dropValidator}});
+            const drop = () => dispatch({type: "drop", payload: {dropValidator: dropValidator, flipped: boardState.flipped}});
 
             window.addEventListener("mousemove", move);
             window.addEventListener("touchmove", moveTouch);
@@ -127,7 +140,7 @@ export function Draggable(props: DraggableProps) {
                 window.removeEventListener("touchend", drop);
             };
         }
-    }, [state.dragging, dropValidator]);
+    }, [state.dragging, dropValidator, boardState]);
 
     useEffect(() => {
         if (state.dropped) {
@@ -139,8 +152,8 @@ export function Draggable(props: DraggableProps) {
     const style = {
         top: getOffset(state).y,
         left: getOffset(state).x,
-        gridRow: state.square.row,
-        gridColumn: state.square.col,
+        gridRow: boardState.flipped ? state.square.row : 9 - state.square.row,
+        gridColumn: boardState.flipped ? 9 - state.square.col : state.square.col,
     };
 
     return (
