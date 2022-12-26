@@ -1,18 +1,23 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './App.css';
 import styles from "./style/app.module.css"
 
 import Game from "./components/Game";
+import GameSetup from "./components/GameSetup";
+import {Rules} from "./model/rules";
 
 function App() {
+    const [rules, setRules] = useState<Rules | undefined>(undefined);
+
     return (
         <div className="App">
-            <h1>Chess, but <span className={styles.butText}>it's completely normal</span></h1>
+            <h1>Chess, but <span className={styles.butText}>{rules === undefined
+                ? "..." // TODO Slideshow through possibilities?
+                : rules.titleText}</span></h1>
             <p>
-                This is local chess with the normal chess rules.
-                Detecting checkmate is left as an exercise to the players.
+                {rules === undefined ? "" : rules.description}
             </p>
-            <Game/>
+            {rules === undefined ? <GameSetup setRules={setRules}/> : <Game rules={rules}/>}
             <div className={styles.footer}>
                 <hr/>
                 <p>

@@ -6,6 +6,7 @@ import {Side} from "../model/types";
 import {defaultPieces} from "../rules/setup/std";
 import {GamePhase, GameState, updateState} from "../model/state";
 import Promotion from "./Promotion";
+import {Rules} from "../model/rules";
 
 export const StateContext = React.createContext<GameState>({
     activeSide: Side.White,
@@ -18,7 +19,11 @@ export const BoardContext = React.createContext({
     flipped: false,
 });
 
-export default function Game() {
+type GameProps = {
+    rules: Rules,
+}
+
+export default function Game(props: GameProps) {
     const [state, dispatchState] = useReducer(updateState, {
         activeSide: Side.White,
         phase: {type: GamePhase.Turn, data: {}},
