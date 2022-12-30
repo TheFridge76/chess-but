@@ -5,6 +5,7 @@ import styles from "./style/app.module.css"
 import Game from "./components/Game";
 import GameSetup from "./components/GameSetup";
 import {Rules} from "./model/rules";
+import HostConnection from "./components/HostConnection";
 
 function App() {
     const [rules, setRules] = useState<Rules | undefined>(undefined);
@@ -17,6 +18,7 @@ function App() {
             <p>
                 {rules === undefined ? "" : rules.description}
             </p>
+            <HostConnection/>
             {rules === undefined ? <GameSetup setRules={setRules}/> : <Game rules={rules}/>}
             <div className={styles.footer}>
                 <hr/>
