@@ -6,9 +6,14 @@ import Game from "./components/Game";
 import GameSetup from "./components/GameSetup";
 import {Rules} from "./model/rules";
 import HostConnection from "./components/HostConnection";
+import PeerConnection from "./components/PeerConnection";
 
 function App() {
-    const [rules, setRules] = useState<Rules | undefined>(undefined);
+    const [rules, setRules] = useState<Rules | undefined>({
+        titleText: "it's completely normal",
+        description: "This is local chess with the normal chess rules.\n" +
+            "Detecting checkmate is left as an exercise to the players."
+    });
 
     return (
         <div className="App">
@@ -19,6 +24,7 @@ function App() {
                 {rules === undefined ? "" : rules.description}
             </p>
             <HostConnection/>
+            <PeerConnection/>
             {rules === undefined ? <GameSetup setRules={setRules}/> : <Game rules={rules}/>}
             <div className={styles.footer}>
                 <hr/>

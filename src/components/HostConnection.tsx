@@ -2,17 +2,16 @@ import {useEffect, useState} from "react";
 import TextField from "./TextField";
 
 import styles from "../style/connection.module.css"
+import {webrtcConfig} from "../webrtc";
 
 export default function HostConnection() {
-    const [state, _setState] = useState(() => {
-        const connection = new RTCPeerConnection();
+    const [state] = useState(() => {
+        const connection = new RTCPeerConnection(webrtcConfig);
         const dataChannel = connection.createDataChannel("results");
-        dataChannel.onopen = (e) => {
-            console.log("Channel opened", e);
-            dataChannel.send("Test");
+        dataChannel.onopen = (_e) => {
         };
         dataChannel.onmessage = (e) => {
-            console.log(e);
+            console.log(e.data);
         };
         return {
             connection: connection,
@@ -34,10 +33,8 @@ export default function HostConnection() {
         };
         // TODO Try to get this to fire only once, even in React Strict Mode
         state.connection.createOffer()
-            .then((offer) => {
-                return state.connection.setLocalDescription(offer);
-            });
-    }, []);
+            .then((offer) => state.connection.setLocalDescription(offer));
+    }, [state.connection]);
 
     useEffect(() => {
         if (answer === undefined) {
@@ -46,12 +43,12 @@ export default function HostConnection() {
         state.connection.setRemoteDescription({
             type: "answer",
             sdp: window.atob(answer),
-        }).then((e) => {
-            console.log("Yay?", e);
-        }).catch((e) => {
-            console.log("Nay?", e);
+        }).then((_e) => {
+            // Successful
+        }).catch((_e) => {
+            // Error
         });
-    }, [answer]);
+    }, [answer, state.connection]);
 
     return (
         <div className={styles.connection}>
