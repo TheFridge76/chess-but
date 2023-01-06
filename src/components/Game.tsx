@@ -21,6 +21,7 @@ export const BoardContext = React.createContext({
 
 type GameProps = {
     rules: Rules,
+    dataChannel?: RTCDataChannel,
 }
 
 export default function Game(props: GameProps) {

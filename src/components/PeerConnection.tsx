@@ -4,26 +4,31 @@ import TextField from "./TextField";
 import styles from "../style/connection.module.css"
 import {webrtcConfig} from "../webrtc";
 
-export default function PeerConnection() {
+type PeerConnectionProps = {
+    onDataChannel: (channel: RTCDataChannel) => void,
+}
+
+export default function PeerConnection(props: PeerConnectionProps) {
     const [state] = useState(() => {
         const connection = new RTCPeerConnection(webrtcConfig);
         return {
             connection: connection,
         };
     });
-    const [dataChannel, setDataChannel] = useState<RTCDataChannel | undefined>(undefined);
 
     const [offer, setOffer] = useState<string | undefined>(undefined);
     const [answer, setAnswer] = useState<string | undefined>(undefined);
 
+    const onDataChannel = props.onDataChannel;
+
     useEffect(() => {
         state.connection.ondatachannel = (e) => {
-            setDataChannel(e.channel);
+            onDataChannel(e.channel);
             e.channel.onmessage = (e) => {
                 console.log(e.data);
             };
         };
-    }, [state.connection]);
+    }, [state.connection, onDataChannel]);
 
     useEffect(() => {
         if (offer === undefined) {
