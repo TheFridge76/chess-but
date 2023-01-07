@@ -1,14 +1,24 @@
-import {CaptureResult, EndTurnResult, MoveResult, ResultType} from "../../model/results";
+import {Result, ResultType} from "../../model/results";
 import {doMove, MoveCondition, MoveValidator} from "../../model/moves";
 import {always} from "./modifiers";
 import {sameSquare, Side} from "../../model/types";
+import {updateState} from "../../model/state";
 
 export const standardMove = (condition: MoveCondition) => {
     const validator: MoveValidator = (from, to, state) => {
         if (condition(from, to, state)) {
-            const results = [new MoveResult(from, to), new EndTurnResult()];
+            const results: Result[] = [{
+                type: ResultType.Move,
+                from: from,
+                to: to,
+            }, {
+                type: ResultType.EndTurn,
+            }];
             if (occupiedOpponent(from, to, state)) {
-                results.unshift(new CaptureResult(to));
+                results.unshift({
+                    type: ResultType.Capture,
+                    on: to,
+                });
             }
             return results;
         }
@@ -79,7 +89,7 @@ export const attackedSquare: MoveCondition = (from, to, state) => {
     const updates = standardMove(always)(from, to, state);
     let newState = state;
     for (const update of updates) {
-        newState = update.apply(newState);
+        newState = updateState(newState, update);
     }
     for (const piece of newState.pieces) {
         const validators = piece.validators;
@@ -110,10 +120,10 @@ export const kingAttacked: MoveCondition = (from, to, state) => {
     }
 
     for (const update of attemptedUpdates) {
-        newState = update.apply(newState);
+        if (update.type !== ResultType.EndTurn) {
+            newState = updateState(newState, update);
+        }
     }
-    // TODO Temporary: Change side back
-    newState = new EndTurnResult().apply(newState);
 
     const kingSquare = {row: king.row, col: king.col};
     return attackedSquare(kingSquare, kingSquare, newState);

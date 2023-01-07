@@ -1,7 +1,8 @@
 import {sameSquare, Side, Square} from "../../model/types";
-import {CaptureResult, EndTurnResult, MoveResult, PromotionResult, ResultType} from "../../model/results";
+import {CaptureResult, MoveResult, Result, ResultType} from "../../model/results";
 import {attackedSquare, emptyPath, occupied, occupiedOpponent, standardMove} from "./util";
 import {MoveCondition, MoveValidator} from "../../model/moves";
+import {updateState} from "../../model/state";
 
 export const KingCondition: MoveCondition = (from, to, _state) => {
     const distY = Math.abs(from.row - to.row);
@@ -59,7 +60,13 @@ export const Pawn: MoveValidator = (from, to, state) => {
     const singleMove = (distX === 0 && distY === 1);
     const doubleMove = (distX === 0 && distY === 2 && virtualRow === 2);
     return (singleMove || doubleMove) && !occupied(from, to, state) && emptyPath(from, to, state)
-        ? [new MoveResult(from, to), new EndTurnResult()]
+        ? [{
+            type: ResultType.Move,
+            from: from,
+            to: to,
+        }, {
+            type: ResultType.EndTurn,
+        }]
         : [];
 }
 
@@ -94,7 +101,17 @@ export const Castling: MoveValidator = (from, to, state) => {
         return [];
     }
 
-    const results = [new MoveResult(from, to), new MoveResult(partner, partnerTo), new EndTurnResult()];
+    const results: Result[] = [{
+        type: ResultType.Move,
+        from: from,
+        to: to,
+    }, {
+        type: ResultType.Move,
+        from: partner,
+        to: partnerTo,
+    }, {
+        type: ResultType.EndTurn,
+    }];
 
     if (!emptyPath(from, partner, state)) {
         // Path from king to partner is not empty
@@ -103,7 +120,7 @@ export const Castling: MoveValidator = (from, to, state) => {
 
     let newState = state;
     for (const result of results) {
-        newState = result.apply(newState);
+        newState = updateState(newState, result);
     }
 
     if (attackedSquare(from, from, state) || attackedSquare(from, partnerTo, state) || attackedSquare(to, to, newState)) {
@@ -180,7 +197,16 @@ export const HolyHell: MoveValidator = (from, to, state) => {
         return [];
     }
 
-    return [new CaptureResult(passed), new MoveResult(from, to), new EndTurnResult()];
+    return [{
+        type: ResultType.Capture,
+        on: passed,
+    }, {
+        type: ResultType.Move,
+        from: from,
+        to: to,
+    }, {
+        type: ResultType.EndTurn,
+    }];
 }
 
 export const Promotion: (side: Side) => MoveValidator = (side: Side) => (_from, to, state) => {
@@ -193,5 +219,9 @@ export const Promotion: (side: Side) => MoveValidator = (side: Side) => (_from, 
             virtualTo = flip(to);
             break;
     }
-    return virtualTo.row === 8 ? [new PromotionResult(to, side)] : [];
+    return virtualTo.row === 8 ? [{
+        type: ResultType.Promotion,
+        on: to,
+        side: side,
+    }] : [];
 }

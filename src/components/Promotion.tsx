@@ -4,7 +4,7 @@ import {StateUpdater} from "../model/state";
 import Piece from "./Piece";
 import {PieceType, Side, Square} from "../model/types";
 import Clickable from "./Clickable";
-import {ReplaceResult} from "../model/results";
+import {ResultType} from "../model/results";
 import {pieceCatalog} from "../rules/pieces/std";
 
 type PromotionProps = {
@@ -19,14 +19,16 @@ function Promotion(props: PromotionProps) {
             <h1 className={styles.header}>You got a promotion!</h1>
             {Object.entries(pieceCatalog).filter(([_, properties]) => properties.promotable).map(([type, properties]) =>
                 <Clickable key={type} onClick={() => {
-                    props.updateState(new ReplaceResult({row: props.square.row, col: props.square.col},
-                        {
+                    props.updateState({
+                        type: ResultType.Replace,
+                        on: {row: props.square.row, col: props.square.col},
+                        piece: {
                             row: props.square.row,
                             col: props.square.col,
                             color: props.side,
                             pieceType: type as PieceType,
                             validators: properties.validators(props.side)
-                        }));
+                        }});
                 }}>
                     <Piece
                         color={props.side}
