@@ -12,11 +12,6 @@ export default function HostConnection(props: HostConnectionProps) {
     const [state] = useState(() => {
         const connection = new RTCPeerConnection(webrtcConfig);
         const dataChannel = connection.createDataChannel("results");
-        dataChannel.onopen = (_e) => {
-        };
-        dataChannel.onmessage = (e) => {
-            console.log(e.data);
-        };
         return {
             connection: connection,
             dataChannel: dataChannel,

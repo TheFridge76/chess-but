@@ -24,9 +24,6 @@ export default function PeerConnection(props: PeerConnectionProps) {
     useEffect(() => {
         state.connection.ondatachannel = (e) => {
             onDataChannel(e.channel);
-            e.channel.onmessage = (e) => {
-                console.log(e.data);
-            };
         };
     }, [state.connection, onDataChannel]);
 
