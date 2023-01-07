@@ -25,6 +25,12 @@ function App() {
         }
     }, [connectionType]);
 
+    useEffect(() => {
+        if (dataChannel !== undefined) {
+            setConnected(true);
+        }
+    }, [dataChannel]);
+
     function renderConnection(type: ConnectionType | undefined) {
         switch (type) {
             case undefined:
