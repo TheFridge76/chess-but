@@ -62,7 +62,7 @@ export default function Game(props: GameProps) {
             <BoardContext.Provider value={{flipped: false}}>
                 <FieldContainer>
                     <Board/>
-                    <PieceContainer updateState={updateAndSendState}/>
+                    <PieceContainer updateState={updateAndSendState} rules={props.rules}/>
                     {state.phase.type === GamePhase.Promotion
                         ? <Promotion updateState={updateAndSendState}
                                      square={state.phase.data.on}

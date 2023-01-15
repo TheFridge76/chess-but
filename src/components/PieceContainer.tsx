@@ -2,11 +2,12 @@ import Piece from "./Piece";
 import Field from "./Field";
 import {useContext} from "react";
 import {StateContext} from "./Game";
-import {TPiece} from "../model/types";
+import {Side, TPiece} from "../model/types";
 import {StateUpdater} from "../model/state";
 import {Draggable} from "./Draggable";
 import {doMove} from "../model/moves";
 import {MoveResult, ResultType} from "../model/results";
+import {Rules} from "../model/rules";
 
 function getKey(piece: TPiece) {
     return `${piece.col}_${piece.row}`;
@@ -14,16 +15,22 @@ function getKey(piece: TPiece) {
 
 type BoardProps = {
     updateState: StateUpdater,
+    rules: Rules,
 }
 
 function Board(props: BoardProps) {
     const state = useContext(StateContext);
 
+    function isActive(color: Side) {
+        return state.activeSide === color
+            && props.rules.playableSides.find((s) => s === state.activeSide) !== undefined;
+    }
+
     return (
         <Field>
             {state.pieces.map((piece) => {
                 return <Draggable key={getKey(piece)}
-                                  active={state.activeSide === piece.color} row={piece.row} col={piece.col}
+                                  active={isActive(piece.color)} row={piece.row} col={piece.col}
                                   dropValidator={(from, to) => {
                                       const updates = doMove(from, to, state, piece.validators);
                                       const move = updates.find((update) => update.type === ResultType.Move) as MoveResult;
