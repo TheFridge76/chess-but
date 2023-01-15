@@ -3,6 +3,7 @@ import TextField from "./TextField";
 
 import styles from "../style/connection.module.css"
 import {webrtcConfig} from "../webrtc";
+import ConnectionStringDisplay from "./ConnectionStringDisplay";
 
 type HostConnectionProps = {
     onDataChannel: (channel: RTCDataChannel) => void,
@@ -59,7 +60,7 @@ export default function HostConnection(props: HostConnectionProps) {
 
     return (
         <div className={styles.connection}>
-            <p className={styles.offer}><b>Offer: </b>{offer}</p>
+            <ConnectionStringDisplay label="Offer:" content={offer}/>
             <p>
                 <TextField name={"answer"} value={""} label={"Answer: "}
                            onEnter={setAnswer} disabled={answer !== undefined}/>

@@ -1,5 +1,17 @@
+.container {
+    display: flex;
+}
+
+.label {
+    margin-right: 0.5em;
+}
+
 .offer {
-    word-break: break-all;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    user-select: all;
 }
 
 .connection {

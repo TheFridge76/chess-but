@@ -3,6 +3,7 @@ import TextField from "./TextField";
 
 import styles from "../style/connection.module.css"
 import {webrtcConfig} from "../webrtc";
+import ConnectionStringDisplay from "./ConnectionStringDisplay";
 
 type PeerConnectionProps = {
     onDataChannel: (channel: RTCDataChannel) => void,
@@ -17,7 +18,7 @@ export default function PeerConnection(props: PeerConnectionProps) {
     });
 
     const [offer, setOffer] = useState<string | undefined>(undefined);
-    const [answer, setAnswer] = useState<string | undefined>(undefined);
+    const [answer, setAnswer] = useState<string>("");
 
     const onDataChannel = props.onDataChannel;
 
@@ -53,7 +54,7 @@ export default function PeerConnection(props: PeerConnectionProps) {
                 <TextField name={"offer"} value={""} label={"Offer: "}
                            onEnter={setOffer} disabled={offer !== undefined}/>
             </p>
-            <p className={styles.offer}><b>Answer: </b>{answer}</p>
+            <ConnectionStringDisplay label="Answer:" content={answer}/>
         </div>
     );
 }

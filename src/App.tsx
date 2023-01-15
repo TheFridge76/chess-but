@@ -52,11 +52,8 @@ function App() {
                 {rules === undefined ? "" : rules.description}
             </p>
             {isConnected ? null : renderConnection(connectionType)}
-            {
-                rules === undefined
-                    ? <GameSetup setRules={setRules}/>
-                    : <Game rules={rules} dataChannel={dataChannel}/>
-            }
+            {rules ? null : <GameSetup setRules={setRules}/>}
+            {rules && isConnected ? <Game rules={rules} dataChannel={dataChannel}/> : null}
             <div className={styles.footer}>
                 <hr/>
                 <p>
