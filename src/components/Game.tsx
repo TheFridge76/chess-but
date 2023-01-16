@@ -66,7 +66,9 @@ export default function Game(props: GameProps) {
 
     return (
         <StateContext.Provider value={state}>
-            <BoardContext.Provider value={{flipped: false}}>
+            <BoardContext.Provider value={{
+                flipped: props.rules.playableSides.find((s) => s === Side.White) === undefined
+            }}>
                 <FieldContainer>
                     <Board/>
                     <PieceContainer updateState={updateAndSendState} rules={props.rules}/>

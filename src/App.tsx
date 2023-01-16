@@ -23,6 +23,7 @@ type State = {
     connectionType?: ConnectionType,
     dataChannel?: RTCDataChannel,
     rules?: Rules,
+    partnerRules?: Rules,
 }
 
 function stateReducer(state: State, action: {
@@ -34,6 +35,7 @@ function stateReducer(state: State, action: {
 } | {
     type: "setRules",
     rules: Rules,
+    partnerRules: Rules,
 }) {
     const newState = {...state};
     // Set stuff
@@ -50,6 +52,7 @@ function stateReducer(state: State, action: {
             console.assert(newState.phase === Phase.SetRules || newState.phase === Phase.AwaitingRules,
                 [state, action]);
             newState.rules = action.rules;
+            newState.partnerRules = action.partnerRules;
             break;
     }
     // Phase transitions
@@ -91,7 +94,8 @@ function App() {
             if (message.type === MessageType.Rules) {
                 dispatch({
                     type: "setRules",
-                    rules: message.content,
+                    rules: message.content.rules,
+                    partnerRules: message.content.partnerRules
                 });
                 if (state.dataChannel) {
                     state.dataChannel.removeEventListener("message", handler);
@@ -110,13 +114,16 @@ function App() {
     }, [state.dataChannel]);
 
     useEffect(() => {
-        if (state.dataChannel && state.rules && state.connectionType === ConnectionType.RemoteHost) {
+        if (state.dataChannel && state.rules && state.partnerRules && state.connectionType === ConnectionType.RemoteHost) {
             state.dataChannel.send(encodeMessage({
                 type: MessageType.Rules,
-                content: state.rules,
+                content: {
+                    rules: state.partnerRules,
+                    partnerRules: state.rules,
+                },
             }));
         }
-    }, [state.rules, state.dataChannel]);
+    }, [state.rules, state.partnerRules, state.dataChannel, state.connectionType]);
 
     function renderConnection(type: ConnectionType) {
         switch (type) {
@@ -140,9 +147,10 @@ function App() {
             case Phase.AwaitingConnection:
                 return renderConnection(state.connectionType as ConnectionType);
             case Phase.SetRules:
-                return <GameSetup setRules={(rules) => {
-                    dispatch({type: "setRules", rules: rules});
-                }}/>;
+                return <GameSetup connectionType={state.connectionType as ConnectionType}
+                                  setRules={(rules, partnerRules) => {
+                                      dispatch({type: "setRules", rules: rules, partnerRules: partnerRules});
+                                  }}/>;
             case Phase.AwaitingRules:
                 return <p>Please wait for the host to set the rules</p>;
             case Phase.Playing:

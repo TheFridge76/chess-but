@@ -12,7 +12,10 @@ export enum MessageType {
 
 export type Message = {
     type: MessageType.Rules,
-    content: Rules,
+    content: {
+        rules: Rules,
+        partnerRules: Rules,
+    },
 } | {
     type: MessageType.Move,
     content: Result,
