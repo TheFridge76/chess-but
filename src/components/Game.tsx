@@ -8,6 +8,7 @@ import {GamePhase, GameState, updateState} from "../model/state";
 import Promotion from "./Promotion";
 import {Rules} from "../model/rules";
 import {Result} from "../model/results";
+import {decodeMessage, encodeMessage, MessageType} from "../webrtc";
 
 export const StateContext = React.createContext<GameState>({
     activeSide: Side.White,
@@ -41,7 +42,10 @@ export default function Game(props: GameProps) {
         }
 
         function messageHandler(e: MessageEvent) {
-            dispatchState(JSON.parse(e.data));
+            const message = decodeMessage(e.data);
+            if (message.type === MessageType.Move) {
+                dispatchState(message.content);
+            }
         }
 
         dataChannel.addEventListener("message", messageHandler);
@@ -53,7 +57,10 @@ export default function Game(props: GameProps) {
     function updateAndSendState(action: Result) {
         dispatchState(action);
         if (dataChannel !== undefined) {
-            dataChannel.send(JSON.stringify(action));
+            dataChannel.send(encodeMessage({
+                type: MessageType.Move,
+                content: action,
+            }));
         }
     }
 

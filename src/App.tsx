@@ -1,4 +1,4 @@
-import React, {useReducer} from 'react';
+import React, {useEffect, useReducer} from 'react';
 import './App.css';
 import styles from "./style/app.module.css"
 
@@ -8,6 +8,7 @@ import {Rules} from "./model/rules";
 import HostConnection from "./components/HostConnection";
 import PeerConnection from "./components/PeerConnection";
 import ConnectionSetup, {ConnectionType} from "./components/ConnectionSetup";
+import {decodeMessage, encodeMessage, MessageType} from "./webrtc";
 
 enum Phase {
     SetConnection,
@@ -38,15 +39,16 @@ function stateReducer(state: State, action: {
     // Set stuff
     switch (action.type) {
         case "setConnectionType":
-            console.assert(newState.phase === Phase.SetConnection);
+            console.assert(newState.phase === Phase.SetConnection, [state, action]);
             newState.connectionType = action.connectionType;
             break;
         case "setDataChannel":
-            console.assert(newState.phase === Phase.SetConnection);
+            console.assert(newState.phase === Phase.AwaitingConnection, [state, action]);
             newState.dataChannel = action.dataChannel;
             break;
         case "setRules":
-            console.assert(newState.phase === Phase.SetRules);
+            console.assert(newState.phase === Phase.SetRules || newState.phase === Phase.AwaitingRules,
+                [state, action]);
             newState.rules = action.rules;
             break;
     }
@@ -69,6 +71,7 @@ function stateReducer(state: State, action: {
             }
             break;
         case Phase.SetRules:
+        case Phase.AwaitingRules:
             if (newState.rules) {
                 newState.phase = Phase.Playing;
             }
@@ -82,7 +85,38 @@ function App() {
         phase: Phase.SetConnection,
     });
 
-    //TODO Send/Receive rules over dataChannel
+    useEffect(() => {
+        function handler(e: MessageEvent) {
+            const message = decodeMessage(e.data);
+            if (message.type === MessageType.Rules) {
+                dispatch({
+                    type: "setRules",
+                    rules: message.content,
+                });
+                if (state.dataChannel) {
+                    state.dataChannel.removeEventListener("message", handler);
+                }
+            }
+        }
+
+        if (state.dataChannel) {
+            state.dataChannel.addEventListener("message", handler);
+        }
+        return () => {
+            if (state.dataChannel) {
+                state.dataChannel.removeEventListener("message", handler);
+            }
+        };
+    }, [state.dataChannel]);
+
+    useEffect(() => {
+        if (state.dataChannel && state.rules && state.connectionType === ConnectionType.RemoteHost) {
+            state.dataChannel.send(encodeMessage({
+                type: MessageType.Rules,
+                content: state.rules,
+            }));
+        }
+    }, [state.rules, state.dataChannel]);
 
     function renderConnection(type: ConnectionType) {
         switch (type) {
