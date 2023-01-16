@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useReducer} from 'react';
 import './App.css';
 import styles from "./style/app.module.css"
 
@@ -9,51 +9,122 @@ import HostConnection from "./components/HostConnection";
 import PeerConnection from "./components/PeerConnection";
 import ConnectionSetup, {ConnectionType} from "./components/ConnectionSetup";
 
+enum Phase {
+    SetConnection,
+    AwaitingConnection,
+    SetRules,
+    AwaitingRules,
+    Playing,
+}
+
+type State = {
+    phase: Phase,
+    connectionType?: ConnectionType,
+    dataChannel?: RTCDataChannel,
+    rules?: Rules,
+}
+
+function stateReducer(state: State, action: {
+    type: "setConnectionType",
+    connectionType: ConnectionType,
+} | {
+    type: "setDataChannel",
+    dataChannel: RTCDataChannel,
+} | {
+    type: "setRules",
+    rules: Rules,
+}) {
+    const newState = {...state};
+    // Set stuff
+    switch (action.type) {
+        case "setConnectionType":
+            console.assert(newState.phase === Phase.SetConnection);
+            newState.connectionType = action.connectionType;
+            break;
+        case "setDataChannel":
+            console.assert(newState.phase === Phase.SetConnection);
+            newState.dataChannel = action.dataChannel;
+            break;
+        case "setRules":
+            console.assert(newState.phase === Phase.SetRules);
+            newState.rules = action.rules;
+            break;
+    }
+    // Phase transitions
+    switch (newState.phase) {
+        case Phase.SetConnection:
+            if (newState.connectionType === ConnectionType.Local) {
+                newState.phase = Phase.SetRules;
+            } else {
+                newState.phase = Phase.AwaitingConnection;
+            }
+            break;
+        case Phase.AwaitingConnection:
+            if (newState.dataChannel) {
+                if (newState.connectionType === ConnectionType.RemoteJoin) {
+                    newState.phase = Phase.AwaitingRules;
+                } else {
+                    newState.phase = Phase.SetRules;
+                }
+            }
+            break;
+        case Phase.SetRules:
+            if (newState.rules) {
+                newState.phase = Phase.Playing;
+            }
+            break;
+    }
+    return newState;
+}
+
 function App() {
-    const [rules, setRules] = useState<Rules | undefined>({
-        titleText: "it's completely normal",
-        description: "This is local chess with the normal chess rules.\n" +
-            "Detecting checkmate is left as an exercise to the players."
+    const [state, dispatch] = useReducer(stateReducer, {
+        phase: Phase.SetConnection,
     });
-    const [connectionType, setConnectionType] = useState<ConnectionType | undefined>(undefined);
-    const [isConnected, setConnected] = useState(false);
-    const [dataChannel, setDataChannel] = useState<RTCDataChannel | undefined>(undefined);
 
-    useEffect(() => {
-        if (connectionType === ConnectionType.Local) {
-            setConnected(true);
-        }
-    }, [connectionType]);
+    //TODO Send/Receive rules over dataChannel
 
-    useEffect(() => {
-        if (dataChannel !== undefined) {
-            setConnected(true);
-        }
-    }, [dataChannel]);
-
-    function renderConnection(type: ConnectionType | undefined) {
+    function renderConnection(type: ConnectionType) {
         switch (type) {
-            case undefined:
-                return <ConnectionSetup onConfirm={setConnectionType}/>;
             case ConnectionType.RemoteHost:
-                return <HostConnection onDataChannel={setDataChannel}/>;
+                return <HostConnection onDataChannel={(dataChannel) => {
+                    dispatch({type: "setDataChannel", dataChannel: dataChannel});
+                }}/>;
             case ConnectionType.RemoteJoin:
-                return <PeerConnection onDataChannel={setDataChannel}/>;
+                return <PeerConnection onDataChannel={(dataChannel) => {
+                    dispatch({type: "setDataChannel", dataChannel: dataChannel});
+                }}/>;
         }
-        return null;
+    }
+
+    function renderPhase(phase: Phase) {
+        switch (phase) {
+            case Phase.SetConnection:
+                return <ConnectionSetup onConfirm={(connType) => {
+                    dispatch({type: "setConnectionType", connectionType: connType});
+                }}/>;
+            case Phase.AwaitingConnection:
+                return renderConnection(state.connectionType as ConnectionType);
+            case Phase.SetRules:
+                return <GameSetup setRules={(rules) => {
+                    dispatch({type: "setRules", rules: rules});
+                }}/>;
+            case Phase.AwaitingRules:
+                return <p>Please wait for the host to set the rules</p>;
+            case Phase.Playing:
+                return <Game rules={state.rules as Rules} dataChannel={state.dataChannel}/>;
+        }
     }
 
     return (
         <div className="App">
-            <h1>Chess, but <span className={styles.butText}>{rules === undefined
+            <h1>Chess, but <span className={styles.butText}>{state.rules === undefined
                 ? "..." // TODO Slideshow through possibilities?
-                : rules.titleText}</span></h1>
+                : state.rules.titleText}</span></h1>
             <p>
-                {rules === undefined ? "" : rules.description}
+                {state.rules === undefined ? "" : state.rules.description}
             </p>
-            {isConnected ? null : renderConnection(connectionType)}
-            {rules ? null : <GameSetup setRules={setRules}/>}
-            {rules && isConnected ? <Game rules={rules} dataChannel={dataChannel}/> : null}
+            {renderPhase(state.phase)}
             <div className={styles.footer}>
                 <hr/>
                 <p>
