@@ -7,6 +7,10 @@ export enum ConnectionType {
     RemoteJoin = "remoteJoin",
 }
 
+export function isConnectionType(connType: any): connType is ConnectionType {
+    return Object.values(ConnectionType).find((t) => t === connType) !== undefined;
+}
+
 const defaultType = ConnectionType.Local;
 
 type ConnectionSetupProps = {

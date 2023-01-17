@@ -1,4 +1,4 @@
-import React, {useEffect, useReducer} from 'react';
+import React, {useEffect, useReducer, useRef} from 'react';
 import './App.css';
 import styles from "./style/app.module.css"
 
@@ -7,7 +7,7 @@ import GameSetup from "./components/GameSetup";
 import {Rules} from "./model/rules";
 import HostConnection from "./components/HostConnection";
 import PeerConnection from "./components/PeerConnection";
-import ConnectionSetup, {ConnectionType} from "./components/ConnectionSetup";
+import ConnectionSetup, {ConnectionType, isConnectionType} from "./components/ConnectionSetup";
 import {decodeMessage, encodeMessage, MessageType} from "./webrtc";
 
 enum Phase {
@@ -41,16 +41,21 @@ function stateReducer(state: State, action: {
     // Set stuff
     switch (action.type) {
         case "setConnectionType":
-            console.assert(newState.phase === Phase.SetConnection, [state, action]);
+            if (newState.phase !== Phase.SetConnection) {
+                return newState;
+            }
             newState.connectionType = action.connectionType;
             break;
         case "setDataChannel":
-            console.assert(newState.phase === Phase.AwaitingConnection, [state, action]);
+            if (newState.phase !== Phase.AwaitingConnection) {
+                return newState;
+            }
             newState.dataChannel = action.dataChannel;
             break;
         case "setRules":
-            console.assert(newState.phase === Phase.SetRules || newState.phase === Phase.AwaitingRules,
-                [state, action]);
+            if (newState.phase !== Phase.SetRules && newState.phase !== Phase.AwaitingRules) {
+                return newState;
+            }
             newState.rules = action.rules;
             newState.partnerRules = action.partnerRules;
             break;
@@ -83,10 +88,44 @@ function stateReducer(state: State, action: {
     return newState;
 }
 
+type SearchParams = {
+    connect?: ConnectionType,
+}
+
+function parseSearch(searchString: string) {
+    const urlSearchParams = new URLSearchParams(searchString);
+    const parsedParams: SearchParams = {};
+    for (const[key, val] of urlSearchParams.entries()) {
+        switch(key) {
+            case "connect":
+                if (isConnectionType(val)) {
+                    parsedParams.connect = val;
+                } else {
+                    console.warn(`Invalid value for query parameter: ${key}=${val}`);
+                }
+                break;
+            default:
+                console.warn(`Unsupported query parameter: ${key}=${val}`);
+                break;
+        }
+    }
+    return parsedParams;
+}
+
 function App() {
     const [state, dispatch] = useReducer(stateReducer, {
         phase: Phase.SetConnection,
     });
+    const searchParams = useRef(parseSearch(document.location.search));
+
+    useEffect(() => {
+        if (state.phase === Phase.SetConnection && searchParams.current.connect) {
+            dispatch({
+                type: "setConnectionType",
+                connectionType: searchParams.current.connect,
+            });
+        }
+    }, [state.phase]);
 
     useEffect(() => {
         function handler(e: MessageEvent) {
