@@ -18,7 +18,6 @@ export default function GameSetup(props: Props) {
             <form>
                 <RadioGroup name={"preset"} value={"std"} items={[
                     {id: "std", label: "Completely normal"},
-                    {id: "anarchy", label: "Anarchy"},
                 ]}/>
                 {
                     props.connectionType === ConnectionType.Local

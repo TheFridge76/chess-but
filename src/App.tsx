@@ -95,8 +95,8 @@ type SearchParams = {
 function parseSearch(searchString: string) {
     const urlSearchParams = new URLSearchParams(searchString);
     const parsedParams: SearchParams = {};
-    for (const[key, val] of urlSearchParams.entries()) {
-        switch(key) {
+    for (const [key, val] of urlSearchParams.entries()) {
+        switch (key) {
             case "connect":
                 if (isConnectionType(val)) {
                     parsedParams.connect = val;
@@ -213,7 +213,11 @@ function App() {
                 ? "..." // TODO Slideshow through possibilities?
                 : state.rules.titleText}</span></h1>
             <p>
-                {state.rules === undefined ? "" : state.rules.description}
+                {
+                    state.rules === undefined
+                        ? "Now with multiplayer!"
+                        : state.rules.description
+                }
             </p>
             {renderPhase(state.phase)}
             <div className={styles.footer}>
