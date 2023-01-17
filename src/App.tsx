@@ -128,6 +128,16 @@ function App() {
     }, [state.phase]);
 
     useEffect(() => {
+        if (state.connectionType) {
+            const urlSearchParams = new URLSearchParams(document.location.search);
+            if (!urlSearchParams.has("connect")) {
+                urlSearchParams.append("connect", state.connectionType);
+            }
+            window.history.pushState({}, "", `${document.location.pathname}?${urlSearchParams.toString()}`);
+        }
+    }, [state.connectionType]);
+
+    useEffect(() => {
         function handler(e: MessageEvent) {
             const message = decodeMessage(e.data);
             if (message.type === MessageType.Rules) {
