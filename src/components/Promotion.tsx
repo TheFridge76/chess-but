@@ -5,7 +5,7 @@ import Piece from "./Piece";
 import {PieceType, Side, Square} from "../model/types";
 import Clickable from "./Clickable";
 import {ResultType} from "../model/results";
-import {pieceCatalog} from "../rules/pieces/std";
+import {pieceCatalog} from "../rules/std/pieces";
 
 type PromotionProps = {
     updateState: StateUpdater,

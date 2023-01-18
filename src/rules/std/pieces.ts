@@ -8,8 +8,8 @@ import {
     occupiedAlly,
     onField,
     standardMove
-} from "../validators/util";
-import {every, negate, some} from "../validators/modifiers";
+} from "../util/validators";
+import {every, negate, some} from "../util/modifiers";
 import {
     BishopCondition,
     Castling,
@@ -17,7 +17,7 @@ import {
     HowDoesItMoveCondition,
     KingCondition, Pawn,
     PawnCapture, Promotion, RookCondition
-} from "../validators/std";
+} from "./validators";
 
 export const pieceCatalog: Record<PieceType, {
     validators: (side: Side) => MoveValidator[][],

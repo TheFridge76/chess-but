@@ -1,5 +1,5 @@
 import {TPiece, PieceType, Side} from "../../model/types";
-import {pieceCatalog} from "../pieces/std";
+import {pieceCatalog} from "./pieces";
 
 export function defaultPieces() {
     const backRow: PieceType[] = ["rook", "horsey", "bishop", "queen", "king", "bishop", "horsey", "rook"];

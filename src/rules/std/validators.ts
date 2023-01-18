@@ -1,6 +1,6 @@
 import {sameSquare, Side, Square} from "../../model/types";
 import {CaptureResult, MoveResult, Result, ResultType} from "../../model/results";
-import {attackedSquare, emptyPath, occupied, occupiedOpponent, standardMove} from "./util";
+import {attackedSquare, emptyPath, occupied, occupiedOpponent, standardMove} from "../util/validators";
 import {MoveCondition, MoveValidator} from "../../model/moves";
 import {updateState} from "../../model/state";
 

@@ -3,7 +3,7 @@ import Board from "./Board";
 import PieceContainer from "./PieceContainer";
 import React, {useEffect, useReducer} from "react";
 import {Side} from "../model/types";
-import {defaultPieces} from "../rules/setup/std";
+import {defaultPieces} from "../rules/std/setup";
 import {GamePhase, GameState, updateState} from "../model/state";
 import Promotion from "./Promotion";
 import {Rules} from "../model/rules";

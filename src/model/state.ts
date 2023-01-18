@@ -1,7 +1,7 @@
 import {CaptureResult, EndTurnResult, MoveResult, PromotionResult, ReplaceResult, Result, ResultType} from "./results";
 import {Side, Square, TPiece} from "./types";
 import React from "react";
-import {handlers} from "../rules/resultHandlers/std";
+import {handlers} from "../rules/std/resultHandlers";
 
 export enum GamePhase {
     Turn,
