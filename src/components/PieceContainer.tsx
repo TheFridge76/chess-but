@@ -7,7 +7,7 @@ import {StateUpdater} from "../model/state";
 import {Draggable} from "./Draggable";
 import {doMove} from "../model/moves";
 import {MoveResult, ResultType} from "../model/results";
-import {Rules} from "../model/rules";
+import {GameRules} from "../model/rules";
 
 function getKey(piece: TPiece) {
     return `${piece.col}_${piece.row}`;
@@ -15,7 +15,7 @@ function getKey(piece: TPiece) {
 
 type BoardProps = {
     updateState: StateUpdater,
-    rules: Rules,
+    rules: GameRules,
 }
 
 function Board(props: BoardProps) {

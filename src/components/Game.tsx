@@ -1,12 +1,11 @@
 import FieldContainer from "./FieldContainer";
 import Board from "./Board";
 import PieceContainer from "./PieceContainer";
-import React, {useEffect, useReducer} from "react";
+import React, {useEffect, useMemo, useReducer} from "react";
 import {Side} from "../model/types";
-import {defaultPieces} from "../rules/std/setup";
 import {GamePhase, GameState, updateState} from "../model/state";
 import Promotion from "./Promotion";
-import {Rules} from "../model/rules";
+import {Rules, toGameRules} from "../model/rules";
 import {Result} from "../model/results";
 import {decodeMessage, encodeMessage, MessageType} from "../webrtc";
 
@@ -27,13 +26,13 @@ type GameProps = {
 }
 
 export default function Game(props: GameProps) {
+    const gameRules = useMemo(() => toGameRules(props.rules), [props.rules]);
     const [state, dispatchState] = useReducer(updateState, {
         activeSide: Side.White,
         phase: {type: GamePhase.Turn, data: {}},
-        pieces: defaultPieces(),
+        pieces: gameRules.setup,
         history: [],
     });
-
     const dataChannel = props.dataChannel;
 
     useEffect(() => {
@@ -71,11 +70,12 @@ export default function Game(props: GameProps) {
             }}>
                 <FieldContainer>
                     <Board/>
-                    <PieceContainer updateState={updateAndSendState} rules={props.rules}/>
+                    <PieceContainer updateState={updateAndSendState} rules={gameRules}/>
                     {state.phase.type === GamePhase.Promotion
                         ? <Promotion updateState={updateAndSendState}
                                      square={state.phase.data.on}
-                                     side={state.phase.data.side}/>
+                                     side={state.phase.data.side}
+                                     rules={gameRules}/>
                         : null}
                 </FieldContainer>
             </BoardContext.Provider>

@@ -18,6 +18,7 @@ export default function GameSetup(props: Props) {
             <form>
                 <RadioGroup name={"preset"} value={"std"} items={[
                     {id: "std", label: "Completely normal"},
+                    {id: "anarchy", label: "Anarchy"},
                 ]}/>
                 {
                     props.connectionType === ConnectionType.Local
@@ -32,11 +33,12 @@ export default function GameSetup(props: Props) {
                 }
             </form>
             <button onClick={() => {
-                const myRules = {
+                const myRules: Rules = {
                     titleText: "it's completely normal",
                     description: "This is local chess with the normal chess rules.\n" +
                         "Detecting checkmate is left as an exercise to the players.",
                     playableSides: side ? [side] : [Side.White, Side.Black],
+                    baseRuleSet: "std",
                 };
                 if (props.connectionType !== ConnectionType.Local) {
                     const yourRules = {...myRules};

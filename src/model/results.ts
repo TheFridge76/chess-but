@@ -9,8 +9,6 @@ export enum ResultType {
     Replace,
 }
 
-export type ResultHandler<T extends Result> = (state: GameState, result: T) => GameState;
-
 export type MoveResult = {
     type: ResultType.Move,
     from: Square,
@@ -39,3 +37,13 @@ export type ReplaceResult = {
 }
 
 export type Result = MoveResult | CaptureResult | EndTurnResult | PromotionResult | ReplaceResult;
+
+export type ResultHandler<T extends Result> = (state: GameState, result: T) => GameState;
+
+export type HandlerDict = {
+    [ResultType.Capture]: ResultHandler<CaptureResult>[],
+    [ResultType.EndTurn]: ResultHandler<EndTurnResult>[],
+    [ResultType.Move]: ResultHandler<MoveResult>[],
+    [ResultType.Promotion]: ResultHandler<PromotionResult>[],
+    [ResultType.Replace]: ResultHandler<ReplaceResult>[],
+}

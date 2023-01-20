@@ -1,9 +1,11 @@
 import {
     CaptureResult,
     EndTurnResult,
+    HandlerDict,
     MoveResult,
     PromotionResult,
-    ReplaceResult, ResultHandler,
+    ReplaceResult,
+    ResultHandler,
     ResultType
 } from "../../model/results";
 import {GamePhase, makeNewState} from "../../model/state";
@@ -61,14 +63,6 @@ const handleReplace: ResultHandler<ReplaceResult> = (state, result) => {
     // Insert new piece
     newState.pieces.push(result.piece);
     return newState;
-}
-
-type HandlerDict = {
-    [ResultType.Capture]: ResultHandler<CaptureResult>[],
-    [ResultType.EndTurn]: ResultHandler<EndTurnResult>[],
-    [ResultType.Move]: ResultHandler<MoveResult>[],
-    [ResultType.Promotion]: ResultHandler<PromotionResult>[],
-    [ResultType.Replace]: ResultHandler<ReplaceResult>[],
 }
 
 export const handlers: HandlerDict = {

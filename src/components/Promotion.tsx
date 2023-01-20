@@ -5,19 +5,20 @@ import Piece from "./Piece";
 import {PieceType, Side, Square} from "../model/types";
 import Clickable from "./Clickable";
 import {ResultType} from "../model/results";
-import {pieceCatalog} from "../rules/std/pieces";
+import {GameRules} from "../model/rules";
 
-type PromotionProps = {
+type Props = {
     updateState: StateUpdater,
     square: Square,
     side: Side,
+    rules: GameRules,
 }
 
-function Promotion(props: PromotionProps) {
+function Promotion(props: Props) {
     return (
         <Field className={styles.background}>
             <h1 className={styles.header}>You got a promotion!</h1>
-            {Object.entries(pieceCatalog).filter(([_, properties]) => properties.promotable).map(([type, properties]) =>
+            {Object.entries(props.rules.pieces).filter(([_, properties]) => properties.promotable).map(([type, properties]) =>
                 <Clickable key={type} onClick={() => {
                     props.updateState({
                         type: ResultType.Replace,
