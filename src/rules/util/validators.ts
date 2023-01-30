@@ -3,6 +3,7 @@ import {doMove, MoveCondition, MoveValidator} from "../../model/moves";
 import {always} from "./modifiers";
 import {sameSquare, Side} from "../../model/types";
 import {updateState} from "../../model/state";
+import {PieceType} from "../library";
 
 export const standardMove = (condition: MoveCondition) => {
     const validator: MoveValidator = (from, to, state) => {
@@ -102,29 +103,35 @@ export const attackedSquare: MoveCondition = (from, to, state) => {
     return false;
 }
 
-export const kingAttacked: MoveCondition = (from, to, state) => {
-    const king = state.pieces.find((piece) => piece.pieceType === "king" && piece.color === state.activeSide);
-    if (king === undefined) {
-        return false;
-    }
+export const pieceAttacked: ((type: PieceType) => MoveCondition) = (type) => {
+    return (from, to, state) => {
+        //TODO Check all instances of this piece
 
-    const piece = state.pieces.find((piece) => sameSquare({row: piece.row, col: piece.col}, from));
-    if (piece === undefined) {
-        return false;
-    }
-
-    let newState = state;
-    const attemptedUpdates = doMove(from, to, newState, piece.validators);
-    if (attemptedUpdates.length === 0) {
-        return false;
-    }
-
-    for (const update of attemptedUpdates) {
-        if (update.type !== ResultType.EndTurn) {
-            newState = updateState(newState, update);
+        // Piece to be checked for attackedness
+        const attackedPiece = state.pieces.find((piece) => piece.pieceType === type && piece.color === state.activeSide);
+        if (attackedPiece === undefined) {
+            return false;
         }
-    }
 
-    const kingSquare = {row: king.row, col: king.col};
-    return attackedSquare(kingSquare, kingSquare, newState);
+        // Piece that does this move
+        const movingPiece = state.pieces.find((piece) => sameSquare({row: piece.row, col: piece.col}, from));
+        if (movingPiece === undefined) {
+            return false;
+        }
+
+        let newState = state;
+        const attemptedUpdates = doMove(from, to, newState, movingPiece.validators);
+        if (attemptedUpdates.length === 0) {
+            return false;
+        }
+
+        for (const update of attemptedUpdates) {
+            if (update.type !== ResultType.EndTurn) {
+                newState = updateState(newState, update);
+            }
+        }
+
+        const squareToBeChecked = {row: attackedPiece.row, col: attackedPiece.col};
+        return attackedSquare(squareToBeChecked, squareToBeChecked, newState);
+    };
 }

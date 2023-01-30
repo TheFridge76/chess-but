@@ -1,4 +1,5 @@
 import {MoveValidator} from "./moves";
+import {PieceType} from "../rules/library";
 
 export type Square = {
     row: number,
@@ -14,23 +15,25 @@ export enum Side {
     Black = "black",
 }
 
-export type PieceType = "pawn" | "rook" | "horsey" | "bishop" | "queen" | "king";
+export type Skin = string;
 
-export type TPieceStatic = {
+export type PieceStaticProps = {
     pieceType: PieceType,
     color: Side,
+    renderAs: Skin,
 }
-export type TPieceDynamic = {
+export type PieceDynamicProps = {
     row: number,
     col: number,
     validators: MoveValidator[][],
 }
-export type TPiece = TPieceStatic & TPieceDynamic;
+export type Piece = PieceStaticProps & PieceDynamicProps;
 
-export function clonePiece(piece: TPiece): TPiece {
+export function clonePiece(piece: Piece): Piece {
     return {
         pieceType: piece.pieceType,
         color: piece.color,
+        renderAs: piece.renderAs,
         row: piece.row,
         col: piece.col,
         validators: piece.validators,

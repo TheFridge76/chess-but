@@ -1,14 +1,16 @@
-import {PieceType, Side, TPiece} from "./types";
+import {Side, Piece, Skin} from "./types";
 import {MoveValidator} from "./moves";
-import {library, Package} from "../rules/library";
+import {library, Package, PieceType} from "../rules/library";
 import {HandlerDict} from "./results";
 
-//TODO Replace PieceType by something more modular/extensible
-type PieceDict<T extends string> = Record<T, {
+export type PieceRules = {
     validators: (side: Side) => MoveValidator[][],
     promotable: boolean,
-}>;
+    renderAs: Skin,
+};
+type PieceDict = Record<PieceType, PieceRules>;
 
+// Rules as set in the setup, serializable
 export type Rules = {
     titleText: string,
     description: string,
@@ -16,10 +18,12 @@ export type Rules = {
     baseRuleSet: Package,
 };
 
+// Rules as used during a game
+// TODO Maybe just use a RuleSet for this?
 export type GameRules = {
     playableSides: Side[],
-    pieces: PieceDict<PieceType>,
-    setup: TPiece[],
+    pieces: PieceDict,
+    setup: Piece[],
     resultHandlers: HandlerDict,
 };
 
@@ -36,8 +40,8 @@ export function toGameRules(rules: Rules): GameRules {
 
 export type RuleSet = {
     id: string, // std/anarchy/... Prepend to piece names?
-    pieces: PieceDict<string>,
-    setup: TPiece[],
+    pieces: PieceDict,
+    setup: Piece[],
     resultHandlers: HandlerDict,
     //layers: any, //TODO Minesweeper oder so?
     modifiers: RuleModifier[],

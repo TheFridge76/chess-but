@@ -1,17 +1,19 @@
-import {TPiece, PieceType, Side} from "../../model/types";
+import {Piece, Side} from "../../model/types";
 import {pieceCatalog} from "./pieces";
+import {StdPieceType} from "./pieceTypes";
 
 export function defaultPieces() {
-    const backRow: PieceType[] = ["rook", "horsey", "bishop", "queen", "king", "bishop", "horsey", "rook"];
-    const frontRow: PieceType[] = ["pawn", "pawn", "pawn", "pawn", "pawn", "pawn", "pawn", "pawn"];
+    const backRow: StdPieceType[] = [StdPieceType.Rook, StdPieceType.Bishop, StdPieceType.Horsey, StdPieceType.Queen, StdPieceType.King, StdPieceType.Horsey, StdPieceType.Bishop, StdPieceType.Rook];
+    const frontRow: StdPieceType[] = [StdPieceType.Pawn, StdPieceType.Pawn, StdPieceType.Pawn, StdPieceType.Pawn, StdPieceType.Pawn, StdPieceType.Pawn, StdPieceType.Pawn, StdPieceType.Pawn];
 
-    const pieces: TPiece[] = [];
+    const pieces: Piece[] = [];
     backRow.forEach((piece, index) => {
         const validators = pieceCatalog[piece].validators(Side.White);
         pieces.push({
             row: 1,
             col: index + 1,
             color: Side.White,
+            renderAs: pieceCatalog[piece].renderAs,
             pieceType: piece,
             validators: validators,
         });
@@ -22,6 +24,7 @@ export function defaultPieces() {
             row: 2,
             col: index + 1,
             color: Side.White,
+            renderAs: pieceCatalog[piece].renderAs,
             pieceType: piece,
             validators: validators,
         });
@@ -32,6 +35,7 @@ export function defaultPieces() {
             row: 8,
             col: index + 1,
             color: Side.Black,
+            renderAs: pieceCatalog[piece].renderAs,
             pieceType: piece,
             validators: validators,
         });
@@ -42,6 +46,7 @@ export function defaultPieces() {
             row: 7,
             col: index + 1,
             color: Side.Black,
+            renderAs: pieceCatalog[piece].renderAs,
             pieceType: piece,
             validators: validators,
         });

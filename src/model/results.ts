@@ -1,4 +1,4 @@
-import {Side, Square, TPiece} from "./types";
+import {Side, Square, Piece} from "./types";
 import {GameState} from "./state";
 
 export enum ResultType {
@@ -33,7 +33,7 @@ export type PromotionResult = {
 export type ReplaceResult = {
     type: ResultType.Replace,
     on: Square,
-    piece: TPiece,
+    piece: Piece,
 }
 
 export type Result = MoveResult | CaptureResult | EndTurnResult | PromotionResult | ReplaceResult;

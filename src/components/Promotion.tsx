@@ -1,11 +1,12 @@
 import styles from "../style/promotion.module.css"
 import Field from "./Field";
 import {StateUpdater} from "../model/state";
-import Piece from "./Piece";
-import {PieceType, Side, Square} from "../model/types";
+import PieceSprite from "./PieceSprite";
+import {Side, Square} from "../model/types";
 import Clickable from "./Clickable";
 import {ResultType} from "../model/results";
 import {GameRules} from "../model/rules";
+import {PieceType} from "../rules/library";
 
 type Props = {
     updateState: StateUpdater,
@@ -27,13 +28,15 @@ function Promotion(props: Props) {
                             row: props.square.row,
                             col: props.square.col,
                             color: props.side,
+                            renderAs: properties.renderAs,
                             pieceType: type as PieceType,
                             validators: properties.validators(props.side)
                         }});
                 }}>
-                    <Piece
+                    <PieceSprite
                         color={props.side}
                         pieceType={type as PieceType}
+                        renderAs={properties.renderAs}
                     />
                 </Clickable>
             )}

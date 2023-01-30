@@ -1,10 +1,8 @@
-import {PieceType, Side} from "../../model/types";
-import {MoveValidator} from "../../model/moves";
 import {
     activeSide,
     attackedSquare,
     emptyPath,
-    kingAttacked,
+    pieceAttacked,
     occupiedAlly,
     onField,
     standardMove
@@ -18,33 +16,38 @@ import {
     KingCondition, Pawn,
     PawnCapture, Promotion, RookCondition
 } from "./validators";
+import {PieceRules} from "../../model/rules";
+import {StdPieceType} from "./pieceTypes";
 
-export const pieceCatalog: Record<PieceType, {
-    validators: (side: Side) => MoveValidator[][],
-    promotable: boolean,
-}> = {
-    "horsey": {
-        validators: (side) => [[activeSide(side), onField, negate(occupiedAlly), negate(kingAttacked), standardMove(HowDoesItMoveCondition)]],
+export const pieceCatalog: Record<StdPieceType, PieceRules> = {
+    [StdPieceType.Horsey]: {
+        validators: (side) => [[activeSide(side), onField, negate(occupiedAlly), negate(pieceAttacked(StdPieceType.King)), standardMove(HowDoesItMoveCondition)]],
         promotable: true,
+        renderAs: "horsey",
     },
-    "bishop": {
-        validators: (side) => [[activeSide(side), onField, negate(occupiedAlly), negate(kingAttacked), standardMove(every(BishopCondition, emptyPath))]],
+    [StdPieceType.Bishop]: {
+        validators: (side) => [[activeSide(side), onField, negate(occupiedAlly), negate(pieceAttacked(StdPieceType.King)), standardMove(every(BishopCondition, emptyPath))]],
         promotable: true,
+        renderAs: "bishop",
     },
-    "king": {
-        validators: (side) => [[activeSide(side), onField, negate(occupiedAlly), negate(kingAttacked), standardMove(KingCondition), Castling, negate(attackedSquare)]],
+    [StdPieceType.King]: {
+        validators: (side) => [[activeSide(side), onField, negate(occupiedAlly), negate(pieceAttacked(StdPieceType.King)), standardMove(KingCondition), Castling, negate(attackedSquare)]],
         promotable: false,
+        renderAs: "king",
     },
-    "pawn": {
-        validators: (side) => [[activeSide(side), onField, negate(occupiedAlly), negate(kingAttacked), Pawn, PawnCapture, HolyHell], [Promotion(side)]],
+    [StdPieceType.Pawn]: {
+        validators: (side) => [[activeSide(side), onField, negate(occupiedAlly), negate(pieceAttacked(StdPieceType.King)), Pawn, PawnCapture, HolyHell], [Promotion(side)]],
         promotable: false,
+        renderAs: "pawn",
     },
-    "queen": {
-        validators: (side) => [[activeSide(side), onField, negate(occupiedAlly), negate(kingAttacked), standardMove(every(some(RookCondition, BishopCondition), emptyPath))]],
+    [StdPieceType.Queen]: {
+        validators: (side) => [[activeSide(side), onField, negate(occupiedAlly), negate(pieceAttacked(StdPieceType.King)), standardMove(every(some(RookCondition, BishopCondition), emptyPath))]],
         promotable: true,
+        renderAs: "queen",
     },
-    "rook": {
-        validators: (side) => [[activeSide(side), onField, negate(occupiedAlly), negate(kingAttacked), standardMove(every(RookCondition, emptyPath))]],
+    [StdPieceType.Rook]: {
+        validators: (side) => [[activeSide(side), onField, negate(occupiedAlly), negate(pieceAttacked(StdPieceType.King)), standardMove(every(RookCondition, emptyPath))]],
         promotable: true,
+        renderAs: "rook",
     },
 };

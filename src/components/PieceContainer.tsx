@@ -1,15 +1,15 @@
-import Piece from "./Piece";
+import PieceSprite from "./PieceSprite";
 import Field from "./Field";
 import {useContext} from "react";
 import {StateContext} from "./Game";
-import {Side, TPiece} from "../model/types";
+import {Side, Piece} from "../model/types";
 import {StateUpdater} from "../model/state";
 import {Draggable} from "./Draggable";
 import {doMove} from "../model/moves";
 import {MoveResult, ResultType} from "../model/results";
 import {GameRules} from "../model/rules";
 
-function getKey(piece: TPiece) {
+function getKey(piece: Piece) {
     return `${piece.col}_${piece.row}`;
 }
 
@@ -42,9 +42,10 @@ function Board(props: BoardProps) {
                                           props.updateState(update);
                                       }
                                   }}>
-                    <Piece
+                    <PieceSprite
                         color={piece.color}
                         pieceType={piece.pieceType}
+                        renderAs={piece.renderAs}
                     />
                 </Draggable>
             })}

@@ -1,5 +1,5 @@
 import {CaptureResult, EndTurnResult, MoveResult, PromotionResult, ReplaceResult, Result, ResultType} from "./results";
-import {Side, Square, TPiece} from "./types";
+import {Side, Square, Piece} from "./types";
 import React from "react";
 import {handlers} from "../rules/std/resultHandlers";
 
@@ -11,7 +11,7 @@ export enum GamePhase {
 export type GameState = {
     activeSide: Side,
     phase: PhaseState,
-    pieces: TPiece[],
+    pieces: Piece[],
     history: Result[],
 };
 
