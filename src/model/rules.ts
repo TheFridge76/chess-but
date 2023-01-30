@@ -1,14 +1,15 @@
 import {Side, Piece, Skin} from "./types";
 import {MoveValidator} from "./moves";
-import {library, Package, PieceType} from "../rules/library";
-import {HandlerDict} from "./results";
+import {allModifiers, library, Package, PieceType} from "../rules/library";
+import {HandlerDict, noHandlers} from "./results";
+import {RuleModifier} from "./modifiers";
 
 export type PieceRules = {
     validators: (side: Side) => MoveValidator[][],
     promotable: boolean,
     renderAs: Skin,
 };
-type PieceDict = Record<PieceType, PieceRules>;
+export type PieceDict<T extends string> = Partial<Record<T, PieceRules>>;
 
 // Rules as set in the setup, serializable
 export type Rules = {
@@ -16,42 +17,41 @@ export type Rules = {
     description: string,
     playableSides: Side[],
     baseRuleSet: Package,
+    modifiers: string[], // TODO Can I typecheck this or should I just give up?
 };
 
 // Rules as used during a game
 // TODO Maybe just use a RuleSet for this?
 export type GameRules = {
     playableSides: Side[],
-    pieces: PieceDict,
+    pieces: PieceDict<PieceType>,
     setup: Piece[],
     resultHandlers: HandlerDict,
 };
 
 export function toGameRules(rules: Rules): GameRules {
-    const gameRules = {
+    let gameRules = {
         playableSides: rules.playableSides,
         pieces: library[rules.baseRuleSet].pieces,
-        setup: library[rules.baseRuleSet].setup,
-        resultHandlers: library[rules.baseRuleSet].resultHandlers,
+        setup: library[rules.baseRuleSet].setup ?? [],
+        resultHandlers: library[rules.baseRuleSet].resultHandlers ?? noHandlers,
     };
-    //TODO Apply modifiers
+    for (const modifierId of rules.modifiers) {
+        const modifier = Object.entries(allModifiers()).find(([id, _]) => id === modifierId);
+        if (modifier === undefined) {
+            console.error(`Could not find modifier ${modifierId}`);
+            continue;
+        }
+        gameRules = modifier[1](gameRules);
+    }
     return gameRules;
 }
 
 export type RuleSet = {
     id: string, // std/anarchy/... Prepend to piece names?
-    pieces: PieceDict,
-    setup: Piece[],
-    resultHandlers: HandlerDict,
+    pieces: PieceDict<string>,
+    setup?: Piece[],
+    resultHandlers?: HandlerDict,
     //layers: any, //TODO Minesweeper oder so?
-    modifiers: RuleModifier[],
+    modifiers: Record<string, RuleModifier>,
 };
-
-// Modifies a RuleSet by adding pieces, changing pieces, ...
-// addPiece(Piece)
-// removePiece(PieceID)
-// addValidator(PieceID, validator)
-// addHandler(Handler)
-// removeHandler(HandlerID)?
-// resetHandlers(ResultType)?
-export type RuleModifier = {};

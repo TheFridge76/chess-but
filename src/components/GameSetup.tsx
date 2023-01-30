@@ -39,6 +39,7 @@ export default function GameSetup(props: Props) {
                         "Detecting checkmate is left as an exercise to the players.",
                     playableSides: side ? [side] : [Side.White, Side.Black],
                     baseRuleSet: "std",
+                    modifiers: ["ana::addKnook"],
                 };
                 if (props.connectionType !== ConnectionType.Local) {
                     const yourRules = {...myRules};

@@ -47,3 +47,11 @@ export type HandlerDict = {
     [ResultType.Promotion]: ResultHandler<PromotionResult>[],
     [ResultType.Replace]: ResultHandler<ReplaceResult>[],
 }
+
+export const noHandlers: HandlerDict = {
+    [ResultType.Capture]: [],
+    [ResultType.EndTurn]: [],
+    [ResultType.Move]: [],
+    [ResultType.Promotion]: [],
+    [ResultType.Replace]: [],
+}

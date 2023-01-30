@@ -8,5 +8,5 @@ export const std: RuleSet = {
     pieces: pieceCatalog,
     resultHandlers: handlers,
     setup: defaultPieces(),
-    modifiers: [],
+    modifiers: {},
 };
