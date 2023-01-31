@@ -1,9 +1,10 @@
 import {std} from "./std/ruleset";
 import {StdPieceType} from "./std/pieceTypes";
-import {AnaModifier, AnaPieceType} from "./anarchy/enums";
+import {AnaModifier, AnaPieceType, AnaValidator} from "./anarchy/enums";
 import {anarchy} from "./anarchy/ruleset";
 import {PieceDict} from "../model/rules";
 import {RuleModifier} from "../model/modifiers";
+import {MoveValidator} from "../model/moves";
 
 export const library = {
     "std": std,
@@ -31,6 +32,17 @@ export function allModifiers() {
     return modifiers;
 }
 
+export function allValidators() {
+    const validators: Record<string, MoveValidator> = {};
+    for (const pack of Object.values(library)) {
+        for (const [id, validator] of Object.entries(pack.validators)) {
+            validators[id] = validator;
+        }
+    }
+    return validators;
+}
+
 export type Package = keyof typeof library;
 export type PieceType = StdPieceType | AnaPieceType;
 export type Modifier = AnaModifier;
+export type ValidatorId = AnaValidator;

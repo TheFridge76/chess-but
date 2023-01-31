@@ -19,6 +19,7 @@ import {
 import {PieceRules} from "../../model/rules";
 import {StdPieceType} from "./pieceTypes";
 
+//TODO Why can't I move negate(occupiedAlly) into the standardMove conditions for all pieces?
 export const pieceCatalog: Record<StdPieceType, PieceRules> = {
     [StdPieceType.Horsey]: {
         validators: (side) => [[activeSide(side), onField, negate(occupiedAlly), negate(pieceAttacked(StdPieceType.King)), standardMove(HowDoesItMoveCondition)]],
@@ -26,7 +27,7 @@ export const pieceCatalog: Record<StdPieceType, PieceRules> = {
         renderAs: "horsey",
     },
     [StdPieceType.Bishop]: {
-        validators: (side) => [[activeSide(side), onField, negate(occupiedAlly), negate(pieceAttacked(StdPieceType.King)), standardMove(every(BishopCondition, emptyPath))]],
+        validators: (side) => [[activeSide(side), onField, negate(pieceAttacked(StdPieceType.King)), standardMove(every(BishopCondition, emptyPath, negate(occupiedAlly)))]],
         promotable: true,
         renderAs: "bishop",
     },

@@ -50,6 +50,7 @@ export function toGameRules(rules: Rules): GameRules {
 export type RuleSet = {
     id: string, // std/anarchy/... Prepend to piece names?
     pieces: PieceDict<string>,
+    validators: Record<string, MoveValidator>,
     setup?: Piece[],
     resultHandlers?: HandlerDict,
     //layers: any, //TODO Minesweeper oder so?

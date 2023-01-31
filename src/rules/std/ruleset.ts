@@ -6,6 +6,7 @@ import {defaultPieces} from "./setup";
 export const std: RuleSet = {
     id: "std",
     pieces: pieceCatalog,
+    validators: {}, //TODO Add validator catalog
     resultHandlers: handlers,
     setup: defaultPieces(),
     modifiers: {},
