@@ -9,16 +9,45 @@ type Props = {
     connectionType: ConnectionType,
 }
 
+enum Preset {
+    Std = "std",
+    Anarchy = "ana",
+}
+
 export default function GameSetup(props: Props) {
     const [side, setSide] = useState<Side | undefined>(undefined);
+    const [preset, setPreset] = useState(Preset.Std);
+
+    function getRulesFromPreset(preset: Preset): Rules {
+        switch(preset) {
+            case Preset.Std:
+                return {
+                    titleText: "it's completely normal",
+                    description: "This is local chess with the normal chess rules.\n" +
+                        "Detecting checkmate is left as an exercise to the players.",
+                    playableSides: side ? [side] : [Side.White, Side.Black],
+                    baseRuleSet: "std",
+                    modifiers: [],
+                };
+            case Preset.Anarchy:
+                return {
+                    titleText: "it's mostly normal",
+                    description: "This is local chess with the normal chess rules.\n" +
+                        "And also some other ones.",
+                    playableSides: side ? [side] : [Side.White, Side.Black],
+                    baseRuleSet: "std",
+                    modifiers: ["ana::addKnook"],
+                };
+        }
+    }
 
     return (
         <>
             <h2>Setup</h2>
             <form>
-                <RadioGroup name={"preset"} value={"std"} items={[
-                    {id: "std", label: "Completely normal"},
-                    {id: "anarchy", label: "Anarchy"},
+                <RadioGroup name={"preset"} value={preset} onChange={setPreset} items={[
+                    {id: Preset.Std, label: "Completely normal"},
+                    {id: Preset.Anarchy, label: "Anarchy"},
                 ]}/>
                 {
                     props.connectionType === ConnectionType.Local
@@ -33,14 +62,7 @@ export default function GameSetup(props: Props) {
                 }
             </form>
             <button onClick={() => {
-                const myRules: Rules = {
-                    titleText: "it's completely normal",
-                    description: "This is local chess with the normal chess rules.\n" +
-                        "Detecting checkmate is left as an exercise to the players.",
-                    playableSides: side ? [side] : [Side.White, Side.Black],
-                    baseRuleSet: "std",
-                    modifiers: ["ana::addKnook"],
-                };
+                const myRules = getRulesFromPreset(preset);
                 if (props.connectionType !== ConnectionType.Local) {
                     const yourRules = {...myRules};
                     switch (side) {
