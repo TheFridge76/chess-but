@@ -1,6 +1,6 @@
 import {Side, Piece, Skin} from "./types";
 import {MoveValidator} from "./moves";
-import {allModifiers, library, Package, PieceType} from "../rules/library";
+import {allModifiers, library, Modifier, Package, PieceType} from "../rules/library";
 import {HandlerDict, noHandlers} from "./results";
 import {RuleModifier} from "./modifiers";
 
@@ -17,7 +17,7 @@ export type Rules = {
     description: string,
     playableSides: Side[],
     baseRuleSet: Package,
-    modifiers: string[], // TODO Can I typecheck this or should I just give up?
+    modifiers: Modifier[],
 };
 
 // Rules as used during a game

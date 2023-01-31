@@ -1,5 +1,5 @@
 import {PieceRules} from "../../model/rules";
-import {AnaPieceType} from "./pieceTypes";
+import {AnaPieceType} from "./enums";
 import {activeSide, emptyPath, occupiedAlly, onField, pieceAttacked, standardMove} from "../util/validators";
 import {every, negate, some} from "../util/modifiers";
 import {StdPieceType} from "../std/pieceTypes";

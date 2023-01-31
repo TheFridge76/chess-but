@@ -1,6 +1,6 @@
 import {std} from "./std/ruleset";
 import {StdPieceType} from "./std/pieceTypes";
-import {AnaPieceType} from "./anarchy/pieceTypes";
+import {AnaModifier, AnaPieceType} from "./anarchy/enums";
 import {anarchy} from "./anarchy/ruleset";
 import {PieceDict} from "../model/rules";
 import {RuleModifier} from "../model/modifiers";
@@ -33,3 +33,4 @@ export function allModifiers() {
 
 export type Package = keyof typeof library;
 export type PieceType = StdPieceType | AnaPieceType;
+export type Modifier = AnaModifier;
