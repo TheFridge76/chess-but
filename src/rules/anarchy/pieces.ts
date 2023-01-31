@@ -15,6 +15,6 @@ export const pieceCatalog: Record<AnaPieceType, PieceRules> = {
             standardMove(every(some(RookCondition, HowDoesItMoveCondition), emptyPath))
         ]],
         promotable: true,
-        renderAs: "horsey",
+        renderAs: "knook",
     },
 };
