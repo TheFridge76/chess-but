@@ -8,7 +8,7 @@ import {
     ResultHandler,
     ResultType
 } from "../../model/results";
-import {GamePhase, makeNewState} from "../../model/state";
+import {GamePhase, GameState, makeNewState} from "../../model/state";
 import {clonePiece, Side} from "../../model/types";
 
 const handleMove: ResultHandler<MoveResult> = (state, result) => {
@@ -46,16 +46,23 @@ const handleEndTurn: ResultHandler<EndTurnResult> = (state, result) => {
 }
 
 const handlePromotion: ResultHandler<PromotionResult> = (state, result) => {
-    const newState = makeNewState(state, result);
-    newState.phase.type = GamePhase.Promotion;
-    newState.phase.data.on = result.on;
-    newState.phase.data.side = result.side;
+    const newState: GameState = makeNewState(state, result);
+    newState.phase = {
+        type: GamePhase.Promotion,
+        data: {
+            on: result.on,
+            side: result.side,
+        }
+    }
     return newState;
 }
 
 const handleReplace: ResultHandler<ReplaceResult> = (state, result) => {
-    const newState = makeNewState(state, result);
-    newState.phase = GamePhase.Turn;
+    const newState: GameState = makeNewState(state, result);
+    newState.phase = {
+        type: GamePhase.Turn,
+        data: {},
+    };
     // Remove old piece
     newState.pieces = state.pieces.filter((piece) => {
         return piece.row !== result.on.row || piece.col !== result.on.col;
