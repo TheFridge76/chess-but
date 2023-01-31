@@ -8,7 +8,7 @@ import {Rules} from "./model/rules";
 import HostConnection from "./components/HostConnection";
 import PeerConnection from "./components/PeerConnection";
 import ConnectionSetup, {ConnectionType, isConnectionType} from "./components/ConnectionSetup";
-import {decodeMessage, encodeMessage, MessageType} from "./webrtc";
+import {decodeMessage, encodeMessage, MessageType} from "./model/webrtc";
 
 enum Phase {
     SetConnection,

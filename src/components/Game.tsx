@@ -7,7 +7,7 @@ import {GamePhase, GameState, updateState} from "../model/state";
 import Promotion from "./Promotion";
 import {Rules, toGameRules} from "../model/rules";
 import {Result} from "../model/results";
-import {decodeMessage, encodeMessage, MessageType} from "../webrtc";
+import {decodeMessage, encodeMessage, MessageType} from "../model/webrtc";
 
 export const StateContext = React.createContext<GameState>({
     activeSide: Side.White,

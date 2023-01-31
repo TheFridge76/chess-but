@@ -1,5 +1,5 @@
-import {Rules} from "./model/rules";
-import {Result} from "./model/results";
+import {Rules} from "./rules";
+import {Result} from "./results";
 
 export const webrtcConfig = {
     "iceServers": [{urls: "stun:stun.hosteurope.de:3478"}]

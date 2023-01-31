@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import TextField from "./TextField";
 
 import styles from "../style/connection.module.css"
-import {webrtcConfig} from "../webrtc";
+import {webrtcConfig} from "../model/webrtc";
 import ConnectionStringDisplay from "./ConnectionStringDisplay";
 
 type HostConnectionProps = {
