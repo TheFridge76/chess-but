@@ -1,8 +1,8 @@
 import {Result, ResultType} from "../../model/results";
 import {doMove, MoveCondition, MoveValidator} from "../../model/moves";
 import {always} from "./modifiers";
-import {sameSquare, Side} from "../../model/types";
-import {updateState} from "../../model/state";
+import {Side} from "../../model/types";
+import {pieceOnSquare, updateState} from "../../model/state";
 import {PieceType} from "../library";
 
 export const standardMove = (condition: MoveCondition) => {
@@ -33,26 +33,17 @@ export const onField: MoveCondition = (from, to, _state) => {
 }
 
 export const occupied: MoveCondition = (_from, to, state) => {
-    return state.pieces.find((piece) =>
-        piece.row === to.row
-        && piece.col === to.col
-    ) !== undefined;
+    return pieceOnSquare(state, to) !== undefined;
 }
 
 export const occupiedOpponent: MoveCondition = (_from, to, state) => {
-    return state.pieces.find((piece) =>
-        piece.row === to.row
-        && piece.col === to.col
-        && piece.color !== state.activeSide
-    ) !== undefined;
+    const piece = pieceOnSquare(state, to);
+    return piece !== undefined && piece.color !== state.activeSide;
 }
 
 export const occupiedAlly: MoveCondition = (_from, to, state) => {
-    return state.pieces.find((piece) =>
-        piece.row === to.row
-        && piece.col === to.col
-        && piece.color === state.activeSide
-    ) !== undefined;
+    const piece = pieceOnSquare(state, to);
+    return piece !== undefined && piece.color === state.activeSide;
 }
 
 export const emptyPath: MoveCondition = (from, to, state) => {
@@ -114,7 +105,7 @@ export const pieceAttacked: ((type: PieceType) => MoveCondition) = (type) => {
         }
 
         // Piece that does this move
-        const movingPiece = state.pieces.find((piece) => sameSquare({row: piece.row, col: piece.col}, from));
+        const movingPiece = pieceOnSquare(state, from);
         if (movingPiece === undefined) {
             return false;
         }

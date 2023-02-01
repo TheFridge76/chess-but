@@ -1,8 +1,8 @@
 import {AnaValidator} from "./enums";
 import {MoveValidator} from "../../model/moves";
 import {StdPieceType} from "../std/pieceTypes";
-import {sameSquare} from "../../model/types";
 import {ResultType} from "../../model/results";
+import {pieceOnSquare} from "../../model/state";
 
 //TODO Allow configuration of able pieces and so on
 const IlVaticano: MoveValidator = (from, to, state) => {
@@ -18,8 +18,7 @@ const IlVaticano: MoveValidator = (from, to, state) => {
         return [];
     }
 
-    //TODO extract function for finding piece on square
-    const targetedPiece = state.pieces.find((piece) => sameSquare(to, {row: piece.row, col: piece.col}));
+    const targetedPiece = pieceOnSquare(state, to);
     console.log(targetedPiece);
     if (targetedPiece === undefined || targetedPiece.pieceType !== StdPieceType.Bishop) {
         // Must target another bishop
@@ -32,7 +31,7 @@ const IlVaticano: MoveValidator = (from, to, state) => {
             row: from.row + vY * i,
             col: from.col + vX * i,
         };
-        const passedPiece = state.pieces.find((piece) => sameSquare(passedSquare, {row: piece.row, col: piece.col}));
+        const passedPiece = pieceOnSquare(state, passedSquare);
         console.log(passedPiece, passedSquare);
         if (passedPiece === undefined || passedPiece.pieceType !== StdPieceType.Pawn) {
             // Must pass pawns

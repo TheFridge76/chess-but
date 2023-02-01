@@ -2,7 +2,7 @@ import {sameSquare, Side, Square} from "../../model/types";
 import {CaptureResult, MoveResult, Result, ResultType} from "../../model/results";
 import {attackedSquare, emptyPath, occupied, occupiedOpponent, standardMove} from "../util/validators";
 import {MoveCondition, MoveValidator} from "../../model/moves";
-import {updateState} from "../../model/state";
+import {pieceOnSquare, updateState} from "../../model/state";
 import {StdPieceType} from "./pieceTypes";
 
 export const KingCondition: MoveCondition = (from, to, _state) => {
@@ -167,7 +167,7 @@ export const HolyHell: MoveValidator = (from, to, state) => {
         return [];
     }
 
-    const passedPiece = state.pieces.find((piece) => sameSquare({row: piece.row, col: piece.col}, passed));
+    const passedPiece = pieceOnSquare(state, passed);
     if (passedPiece === undefined || passedPiece.pieceType !== StdPieceType.Pawn) {
         // Can only en passant pawns :(
         return [];

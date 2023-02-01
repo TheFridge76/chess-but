@@ -1,5 +1,5 @@
 import {CaptureResult, EndTurnResult, MoveResult, PromotionResult, ReplaceResult, Result, ResultType} from "./results";
-import {Side, Square, Piece} from "./types";
+import {Side, Square, Piece, sameSquare} from "./types";
 import React from "react";
 import {handlers} from "../rules/std/resultHandlers";
 
@@ -31,6 +31,10 @@ type PhasePromotionState = {
 };
 
 export type StateUpdater = React.Dispatch<Result>;
+
+export function pieceOnSquare(state: GameState, square: Square): Piece | undefined {
+    return state.pieces.find((piece) => sameSquare(square, {row: piece.row, col: piece.col}));
+}
 
 export function makeNewState(state: GameState, action: Result) {
     return {
