@@ -21,11 +21,11 @@ export type PieceStaticProps = {
     pieceType: PieceType,
     color: Side,
     renderAs: Skin,
+    validators: MoveValidator[][],
 }
 export type PieceDynamicProps = {
     row: number,
     col: number,
-    validators: MoveValidator[][],
 }
 export type Piece = PieceStaticProps & PieceDynamicProps;
 
