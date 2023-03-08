@@ -1,6 +1,65 @@
-import {stringToPieces} from "./setup";
+import {parsePiece, stringToPieces} from "./setup";
 import {StdPieceType} from "../rules/std/pieceTypes";
 import {Side} from "./types";
+import {GameRules} from "./rules";
+import {std} from "../rules/std/ruleset";
+import {ResultType} from "./results";
+import {PieceType} from "../rules/library";
+
+describe("parse piece", () => {
+    const rules: GameRules = {
+        playableSides: [Side.White, Side.Black],
+        pieces: std.pieces,
+        setup: [],
+        resultHandlers: {
+            [ResultType.Capture]: [],
+            [ResultType.Replace]: [],
+            [ResultType.EndTurn]: [],
+            [ResultType.Move]: [],
+            [ResultType.Promotion]: [],
+        },
+    };
+
+    test.each([
+        ["p", StdPieceType.Pawn],
+        ["n", StdPieceType.Horsey],
+    ])("parses short form %s", (id: string, pieceType: PieceType) => {
+        const piece = parsePiece(rules, id);
+        expect(piece?.pieceType).toEqual(pieceType);
+    });
+    test.each([
+        ["n", Side.Black],
+        ["N", Side.White],
+    ])("gets side from short form %s", (id: string, side: Side) => {
+        const piece = parsePiece(rules, id);
+        expect(piece?.color).toEqual(side);
+    });
+    test("fails on invalid short form", () => {
+        const id = "s";
+        const piece = parsePiece(rules, id);
+        expect(piece).toEqual(undefined);
+    });
+    test.each([
+        [StdPieceType.Pawn],
+        [StdPieceType.Horsey],
+    ])("parses long form %s", (pieceType: PieceType) => {
+        const id = `${pieceType}_${Side.White}`;
+        const piece = parsePiece(rules, id);
+        expect(piece?.pieceType).toEqual(pieceType);
+    });
+    test.each([
+        [`${StdPieceType.Horsey}_${Side.Black}`, Side.Black],
+        [`${StdPieceType.Horsey}_${Side.White}`, Side.White],
+    ])("gets side from long form %s", (id: string, side: Side) => {
+        const piece = parsePiece(rules, id);
+        expect(piece?.color).toEqual(side);
+    });
+    test("fails on invalid long form", () => {
+        const id = "popo";
+        const piece = parsePiece(rules, id);
+        expect(piece).toEqual(undefined);
+    });
+});
 
 describe("string to setup", () => {
     const pieceParser = (_pieceString: string) => {

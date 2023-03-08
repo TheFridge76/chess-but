@@ -13,12 +13,13 @@ export const parsePiece: ParsePieceFunction = (rules, pieceString) => {
 }
 
 const parsePieceLong: ParsePieceFunction = (rules, pieceString) => {
-    const pieceType = rules.pieces[pieceString as PieceType];
-    if (pieceType) {
+    const [id, side] = pieceString.split("_");
+    const pieceType = rules.pieces[id as PieceType];
+    if (pieceType && rules.playableSides.includes(side as Side)) {
         return {
-            pieceType: pieceString as PieceType,
+            pieceType: id as PieceType,
             renderAs: pieceType.renderAs,
-            color: Side.Black,
+            color: side as Side,
             validators: pieceType.validators(Side.Black),
         };
     } else {
