@@ -1,6 +1,6 @@
 import {Piece, PieceStaticProps, Side} from "./types";
-import {GameRules} from "./rules";
-import {PieceType} from "../rules/library";
+import {GameRules, PieceRules} from "./rules";
+import {PieceType, shortForms} from "../rules/library";
 
 type ParsePieceFunction = (rules: GameRules, pieceString: string) => PieceStaticProps | undefined;
 
@@ -14,13 +14,13 @@ export const parsePiece: ParsePieceFunction = (rules, pieceString) => {
 
 const parsePieceLong: ParsePieceFunction = (rules, pieceString) => {
     const [id, side] = pieceString.split("_");
-    const pieceType = rules.pieces[id as PieceType];
-    if (pieceType && rules.playableSides.includes(side as Side)) {
+    const piece = rules.pieces[id as PieceType];
+    if (piece && rules.playableSides.includes(side as Side)) {
         return {
             pieceType: id as PieceType,
-            renderAs: pieceType.renderAs,
+            renderAs: piece.renderAs,
             color: side as Side,
-            validators: pieceType.validators(Side.Black),
+            validators: piece.validators(side as Side),
         };
     } else {
         return undefined;
@@ -28,6 +28,17 @@ const parsePieceLong: ParsePieceFunction = (rules, pieceString) => {
 }
 
 const parsePieceShort: ParsePieceFunction = (rules, pieceString) => {
+    const side = pieceString.toLowerCase() === pieceString ? Side.Black : Side.White;
+    const pieceType = shortForms[pieceString.toLowerCase() as keyof typeof shortForms];
+    if (pieceType && rules.pieces[pieceType]) {
+        const piece = rules.pieces[pieceType] as PieceRules;
+        return {
+            pieceType: pieceType,
+            renderAs: piece.renderAs,
+            color: side,
+            validators: piece.validators(side),
+        };
+    }
     return undefined;
 }
 

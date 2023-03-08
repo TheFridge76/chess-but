@@ -11,6 +11,15 @@ export const library = {
     "ana": anarchy,
 };
 
+export const shortForms = {
+    "p": StdPieceType.Pawn,
+    "n": StdPieceType.Horsey,
+    "b": StdPieceType.Bishop,
+    "k": StdPieceType.King,
+    "r": StdPieceType.Rook,
+    "q": StdPieceType.Queen,
+}
+
 // TODO Unify these functions
 export function allPieces() {
     const pieces: PieceDict<string> = {};
