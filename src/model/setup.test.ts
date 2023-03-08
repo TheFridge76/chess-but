@@ -1,23 +1,13 @@
-import {parsePiece, stringToPieces} from "./setup";
+import {parsePiece, SetupRules, stringToPieces} from "./setup";
 import {StdPieceType} from "../rules/std/pieceTypes";
 import {Side} from "./types";
-import {GameRules} from "./rules";
 import {std} from "../rules/std/ruleset";
-import {ResultType} from "./results";
 import {PieceType} from "../rules/library";
 
 describe("parse piece", () => {
-    const rules: GameRules = {
+    const rules: SetupRules = {
         playableSides: [Side.White, Side.Black],
         pieces: std.pieces,
-        setup: [],
-        resultHandlers: {
-            [ResultType.Capture]: [],
-            [ResultType.Replace]: [],
-            [ResultType.EndTurn]: [],
-            [ResultType.Move]: [],
-            [ResultType.Promotion]: [],
-        },
     };
 
     test.each([
