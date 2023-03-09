@@ -1,9 +1,9 @@
 import styles from "../style/pieces.module.css"
-import {PieceStaticProps} from "../model/types";
+import {Piece} from "../model/types";
 
-type PieceProps = {};
+type Props = Pick<Piece, "renderAs" | "pieceType" | "color">;
 
-export default function PieceSprite(props: PieceProps & PieceStaticProps) {
+export default function PieceSprite(props: Props) {
     return (
         <div className={`${styles.piece} ${styles[props.renderAs]} ${styles[props.color]}`}/>
     );
