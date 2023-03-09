@@ -40,10 +40,8 @@ export const addValidator: RuleModifierTemplate<AddValidatorProps> = (props: Add
             return rules;
         }
         //TODO Put validator IDs into piece.validators so that this can be done better
-        //TODO Also rework setup, such that in the setup, the overriden validators are used
         const oldValidators = piece.validators;
         piece.validators = (side: Side) => {
-            console.log("Ran updated validators thingy");
             const validators = oldValidators(side);
             validators[props.stage].unshift(entry[1]);
             return validators;

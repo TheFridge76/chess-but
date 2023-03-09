@@ -11,15 +11,12 @@ const IlVaticano: MoveValidator = (from, to, state) => {
     const vY = distY === 0 ? 0 : (to.row - from.row) / distY;
     const vX = distX === 0 ? 0 : (to.col - from.col) / distX;
 
-    console.log(distX, distY, vX, vY);
-
     if (!((distX === 3 && distY === 0) || (distX === 0 && distY === 3))) {
         // Must target three spaces in one direction
         return [];
     }
 
     const targetedPiece = pieceOnSquare(state, to);
-    console.log(targetedPiece);
     if (targetedPiece === undefined || targetedPiece.pieceType !== StdPieceType.Bishop) {
         // Must target another bishop
         return [];
@@ -32,7 +29,6 @@ const IlVaticano: MoveValidator = (from, to, state) => {
             col: from.col + vX * i,
         };
         const passedPiece = pieceOnSquare(state, passedSquare);
-        console.log(passedPiece, passedSquare);
         if (passedPiece === undefined || passedPiece.pieceType !== StdPieceType.Pawn) {
             // Must pass pawns
             return [];

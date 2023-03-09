@@ -28,7 +28,6 @@ type GameProps = {
 
 export default function Game(props: GameProps) {
     const gameRules = useMemo(() => toGameRules(props.rules), [props.rules]);
-    console.log(gameRules.setup);
     const [state, dispatchState] = useReducer(updateState, {
         activeSide: Side.White,
         phase: {type: GamePhase.Turn, data: {}},
