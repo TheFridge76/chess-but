@@ -115,7 +115,7 @@ describe("string to setup", () => {
         test("pieces at beginning of row", () => {
             const setupStr = `n//n/n`;
             const setup = stringToPieces(setupStr, pieceParser);
-            for (let row of [1, 3, 4]) {
+            for (let row of [1, 2, 4]) {
                 expect(setup.find((piece) => piece.col === 1 && piece.row === row)).not.toEqual(undefined);
             }
             expect(setup.find((piece) => piece.col === 1 && piece.row === 5)).toEqual(undefined);

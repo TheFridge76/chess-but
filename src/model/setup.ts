@@ -74,7 +74,7 @@ export function stringToPieces(setupStr: string, parsePiece: (pieceString: strin
             const id = (nextLong && i === nextLong.index) ? nextLong[1] : row[i];
             const piece = parsePiece(id);
             if (piece) {
-                pieces.push({...piece, col: x + 1, row: y + 1});
+                pieces.push({...piece, col: x + 1, row: rows.length - y});
             } else {
                 console.error(`Invalid setup: Could not find piece "${id}"`);
                 return [];
