@@ -20,7 +20,7 @@ export const addPiece: RuleModifierTemplate<PieceType> = (piece: PieceType) => {
         rules.pieces[piece] = entry[1];
         return rules;
     };
-}
+};
 
 type AddValidatorProps = {
     id: ValidatorId,
@@ -48,4 +48,11 @@ export const addValidator: RuleModifierTemplate<AddValidatorProps> = (props: Add
         };
         return rules;
     }
-}
+};
+
+export const changeSetup: RuleModifierTemplate<string> = (setup: string) => {
+    return (rules: GameRules) => {
+        rules.setup = setup;
+        return rules;
+    };
+};

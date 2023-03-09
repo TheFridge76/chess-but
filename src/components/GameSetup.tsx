@@ -37,7 +37,11 @@ export default function GameSetup(props: Props) {
                         "And also some other ones.",
                     playableSides: side ? [side] : [Side.White, Side.Black],
                     baseRuleSet: "std",
-                    modifiers: [AnaModifier.AddKnook, AnaModifier.EnableIlVaticano],
+                    modifiers: [
+                        AnaModifier.AddKnook,
+                        AnaModifier.EnableIlVaticano,
+                        AnaModifier.AutoBong,
+                    ],
                 };
         }
     }

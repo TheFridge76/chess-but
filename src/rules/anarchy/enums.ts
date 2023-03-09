@@ -4,7 +4,8 @@ export enum AnaPieceType {
 
 export enum AnaModifier {
     AddKnook = "ana::addKnook",
-    EnableIlVaticano = "ana::enableIlVaticano"
+    EnableIlVaticano = "ana::enableIlVaticano",
+    AutoBong = "ana::autoBong",
 }
 
 export enum AnaValidator {
