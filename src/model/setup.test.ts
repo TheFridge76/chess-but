@@ -1,11 +1,11 @@
-import {parsePiece, SetupRules, stringToPieces} from "./setup";
+import {parsePiece, stringToPieces} from "./setup";
 import {StdPieceType} from "../rules/std/pieceTypes";
 import {Side} from "./types";
 import {std} from "../rules/std/ruleset";
 import {PieceType} from "../rules/library";
 
 describe("parse piece", () => {
-    const rules: SetupRules = {
+    const rules = {
         playableSides: [Side.White, Side.Black],
         pieces: std.pieces,
     };

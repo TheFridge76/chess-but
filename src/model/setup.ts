@@ -2,8 +2,8 @@ import {Piece, PieceStaticProps, Side} from "./types";
 import {GameRules, PieceRules} from "./rules";
 import {PieceType, shortForms} from "../rules/library";
 
-export type SetupRules = Pick<GameRules, "pieces" | "playableSides">;
-type ParsePieceFunction = (rules: SetupRules, pieceString: string) => PieceStaticProps | undefined;
+type Rules = Pick<GameRules, "pieces" | "playableSides">;
+type ParsePieceFunction = (rules: Rules, pieceString: string) => PieceStaticProps | undefined;
 
 export const parsePiece: ParsePieceFunction = (rules, pieceString) => {
     if (pieceString.length === 1) {
