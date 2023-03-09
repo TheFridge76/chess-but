@@ -102,6 +102,14 @@ describe("string to setup", () => {
                 expect(piece.pieceType).toEqual(StdPieceType.Horsey);
             }
         });
+        test("explicit empty rows", () => {
+            const setupStr = `nnnnnnnn/8/nnnnnnnn`;
+            const setup = stringToPieces(setupStr, pieceParser);
+            expect(setup.length).toEqual(16);
+            for (let piece of setup) {
+                expect(piece.pieceType).toEqual(StdPieceType.Horsey);
+            }
+        });
     });
     describe("correctly places", () => {
         test("pieces at beginning of row", () => {

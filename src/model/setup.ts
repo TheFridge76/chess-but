@@ -84,6 +84,8 @@ export function stringToPieces(setupStr: string, parsePiece: (pieceString: strin
                 i = longFormRegex.lastIndex - 1;
             }
         }
+        longFormRegex.lastIndex = 0;
+        emptySpaceRegex.lastIndex = 0;
     }
     return pieces;
 }
