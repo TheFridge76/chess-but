@@ -1,4 +1,4 @@
-import {Side, Piece, Skin} from "./types";
+import {Side, Skin} from "./types";
 import {MoveValidator} from "./moves";
 import {allModifiers, library, Modifier, Package, PieceType} from "../rules/library";
 import {HandlerDict, noHandlers} from "./results";
@@ -25,7 +25,7 @@ export type Rules = {
 export type GameRules = {
     playableSides: Side[],
     pieces: PieceDict<PieceType>,
-    setup: Piece[],
+    setup: string,
     resultHandlers: HandlerDict,
 };
 
@@ -33,7 +33,7 @@ export function toGameRules(rules: Rules): GameRules {
     let gameRules = {
         playableSides: rules.playableSides,
         pieces: library[rules.baseRuleSet].pieces,
-        setup: library[rules.baseRuleSet].setup ?? [],
+        setup: library[rules.baseRuleSet].setup ?? "",
         resultHandlers: library[rules.baseRuleSet].resultHandlers ?? noHandlers,
     };
     for (const modifierId of rules.modifiers) {
@@ -51,7 +51,7 @@ export type RuleSet = {
     id: string, // std/anarchy/... Prepend to piece names?
     pieces: PieceDict<string>,
     validators: Record<string, MoveValidator>,
-    setup?: Piece[],
+    setup?: string,
     resultHandlers?: HandlerDict,
     //layers: any, //TODO Minesweeper oder so?
     modifiers: Record<string, RuleModifier>,

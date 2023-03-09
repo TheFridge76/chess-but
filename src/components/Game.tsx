@@ -8,6 +8,7 @@ import Promotion from "./Promotion";
 import {Rules, toGameRules} from "../model/rules";
 import {Result} from "../model/results";
 import {decodeMessage, encodeMessage, MessageType} from "../model/webrtc";
+import {parsePiece, stringToPieces} from "../model/setup";
 
 export const StateContext = React.createContext<GameState>({
     activeSide: Side.White,
@@ -27,10 +28,11 @@ type GameProps = {
 
 export default function Game(props: GameProps) {
     const gameRules = useMemo(() => toGameRules(props.rules), [props.rules]);
+    console.log(gameRules.setup);
     const [state, dispatchState] = useReducer(updateState, {
         activeSide: Side.White,
         phase: {type: GamePhase.Turn, data: {}},
-        pieces: gameRules.setup,
+        pieces: stringToPieces(gameRules.setup, parsePiece.bind(null, gameRules)),
         history: [],
     });
     const dataChannel = props.dataChannel;
