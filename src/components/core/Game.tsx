@@ -1,14 +1,14 @@
 import FieldContainer from "./FieldContainer";
-import Board from "./Board";
-import PieceContainer from "./PieceContainer";
+import Board from "../fields/Board";
+import PieceContainer from "../fields/PieceContainer";
 import React, {useEffect, useMemo, useReducer} from "react";
-import {Side} from "../model/types";
-import {GamePhase, GameState, updateState} from "../model/state";
-import Promotion from "./Promotion";
-import {Rules, toGameRules} from "../model/rules";
-import {Result} from "../model/results";
-import {decodeMessage, encodeMessage, MessageType} from "../model/webrtc";
-import {parsePiece, stringToPieces} from "../model/setup";
+import {Side} from "../../model/types";
+import {GamePhase, GameState, updateState} from "../../model/state";
+import Promotion from "../fields/Promotion";
+import {Rules, toGameRules} from "../../model/rules";
+import {Result} from "../../model/results";
+import {decodeMessage, encodeMessage, MessageType} from "../../model/webrtc";
+import {parsePiece, stringToPieces} from "../../model/setup";
 
 export const StateContext = React.createContext<GameState>({
     activeSide: Side.White,
@@ -21,12 +21,12 @@ export const BoardContext = React.createContext({
     flipped: false,
 });
 
-type GameProps = {
+type Props = {
     rules: Rules,
     dataChannel?: RTCDataChannel,
 }
 
-export default function Game(props: GameProps) {
+export default function Game(props: Props) {
     const gameRules = useMemo(() => toGameRules(props.rules), [props.rules]);
     const [state, dispatchState] = useReducer(updateState, {
         activeSide: Side.White,

@@ -1,20 +1,20 @@
 import {useEffect, useState} from "react";
 
-import styles from "../style/radiogroup.module.css"
+import styles from "../../style/radiogroup.module.css"
 
 type RadioItem<T extends string> = {
     id: T,
     label: string,
 }
 
-type RadioGroupProps<T extends string> = {
+type Props<T extends string> = {
     name: string,
     value: T,
     items: RadioItem<T>[],
     onChange?: (value: T) => void,
 }
 
-export default function RadioGroup<T extends string>(props: RadioGroupProps<T>) {
+export default function RadioGroup<T extends string>(props: Props<T>) {
     const [value, setValue] = useState(props.value);
     const onChange = props.onChange;
 

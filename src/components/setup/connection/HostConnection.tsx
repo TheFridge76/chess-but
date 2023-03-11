@@ -1,15 +1,14 @@
 import {useEffect, useState} from "react";
-import TextField from "./TextField";
-
-import styles from "../style/connection.module.css"
-import {webrtcConfig} from "../model/webrtc";
+import TextField from "../../utility/TextField";
+import styles from "../../../style/connection.module.css"
+import {webrtcConfig} from "../../../model/webrtc";
 import ConnectionStringDisplay from "./ConnectionStringDisplay";
 
-type HostConnectionProps = {
+type Props = {
     onDataChannel: (channel: RTCDataChannel) => void,
 }
 
-export default function HostConnection(props: HostConnectionProps) {
+export default function HostConnection(props: Props) {
     const [state] = useState(() => {
         const connection = new RTCPeerConnection(webrtcConfig);
         const dataChannel = connection.createDataChannel("results");

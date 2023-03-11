@@ -1,12 +1,12 @@
 import React, {ReactNode} from "react";
 import {touchToMouse} from "./Draggable";
 
-type ClickableProps = {
+type Props = {
     children: ReactNode,
     onClick: (e: React.MouseEvent | React.Touch) => void,
 }
 
-export default function Clickable(props: ClickableProps) {
+export default function Clickable(props: Props) {
     return <div
         onMouseDown={props.onClick}
         onTouchStart={(e) => touchToMouse(e, props.onClick)}

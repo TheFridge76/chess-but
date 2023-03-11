@@ -1,4 +1,4 @@
-import RadioGroup from "./RadioGroup";
+import RadioGroup from "../../utility/RadioGroup";
 import {useState} from "react";
 
 export enum ConnectionType {
@@ -13,11 +13,11 @@ export function isConnectionType(connType: any): connType is ConnectionType {
 
 const defaultType = ConnectionType.Local;
 
-type ConnectionSetupProps = {
+type Props = {
     onConfirm: (type: ConnectionType) => void,
 }
 
-export default function ConnectionSetup(props: ConnectionSetupProps) {
+export default function ConnectionSetup(props: Props) {
     const [type, setType] = useState<ConnectionType>(defaultType);
 
     return (

@@ -1,5 +1,5 @@
-import styles from "../style/pieces.module.css"
-import {Piece} from "../model/types";
+import styles from "../../style/pieces.module.css"
+import {Piece} from "../../model/types";
 
 type Props = Pick<Piece, "renderAs" | "renderColor">;
 

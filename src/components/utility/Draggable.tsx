@@ -1,7 +1,7 @@
-import styles from "../style/draggable.module.css"
+import styles from "../../style/draggable.module.css"
 import React, {ReactNode, useContext, useEffect, useReducer, useRef} from "react";
-import {Square} from "../model/types";
-import {BoardContext} from "./Game";
+import {Square} from "../../model/types";
+import {BoardContext} from "../core/Game";
 
 export function touchToMouse(e: React.TouchEvent | TouchEvent, handler: (e: React.Touch | Touch) => void) {
     if (e.touches.length === 1) {
@@ -105,7 +105,7 @@ type Props = {
     onDrop: (from: Square, to: Square) => void,
 };
 
-export function Draggable(props: Props) {
+export default function Draggable(props: Props) {
     const ref = useRef<HTMLDivElement>(null);
     const boardState = useContext(BoardContext);
 

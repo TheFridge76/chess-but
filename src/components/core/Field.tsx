@@ -1,17 +1,15 @@
-import styles from "../style/field.module.css"
+import styles from "../../style/field.module.css"
 import {ReactNode} from "react";
 
-type FieldProps = {
+type Props = {
     children: ReactNode,
     className?: string,
 }
 
-function Field(props: FieldProps) {
+export default function Field(props: Props) {
     return (
         <div className={`${styles.field} ${props.className}`}>
             {props.children}
         </div>
     );
 }
-
-export default Field;

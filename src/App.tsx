@@ -2,12 +2,12 @@ import React, {useEffect, useReducer, useRef} from 'react';
 import './App.css';
 import styles from "./style/app.module.css"
 
-import Game from "./components/Game";
-import GameSetup from "./components/GameSetup";
+import Game from "./components/core/Game";
+import GameSetup from "./components/setup/GameSetup";
 import {Rules} from "./model/rules";
-import HostConnection from "./components/HostConnection";
-import PeerConnection from "./components/PeerConnection";
-import ConnectionSetup, {ConnectionType, isConnectionType} from "./components/ConnectionSetup";
+import HostConnection from "./components/setup/connection/HostConnection";
+import PeerConnection from "./components/setup/connection/PeerConnection";
+import ConnectionSetup, {ConnectionType, isConnectionType} from "./components/setup/connection/ConnectionSetup";
 import {decodeMessage, encodeMessage, MessageType} from "./model/webrtc";
 
 enum Phase {

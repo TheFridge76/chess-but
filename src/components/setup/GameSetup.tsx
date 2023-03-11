@@ -1,9 +1,9 @@
-import {Rules} from "../model/rules";
-import RadioGroup from "./RadioGroup";
-import {Side} from "../model/types";
-import {ConnectionType} from "./ConnectionSetup";
+import {Rules} from "../../model/rules";
+import RadioGroup from "../utility/RadioGroup";
+import {Side} from "../../model/types";
+import {ConnectionType} from "./connection/ConnectionSetup";
 import {useState} from "react";
-import {AnaModifier} from "../rules/anarchy/enums";
+import {AnaModifier} from "../../rules/anarchy/enums";
 
 type Props = {
     setRules: (rules: Rules, partnerRules: Rules) => void,
@@ -82,7 +82,8 @@ export default function GameSetup(props: Props) {
                 } else {
                     props.setRules(myRules, myRules);
                 }
-            }}>Ready
+            }}>
+                Ready
             </button>
         </>
     );

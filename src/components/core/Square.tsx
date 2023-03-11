@@ -1,15 +1,15 @@
-import styles from "../style/board.module.css"
+import styles from "../../style/board.module.css"
 
 export enum Color {
     Dark,
     Light
 }
 
-type SquareProps = {
+type Props = {
     color: Color
 };
 
-export function Square(props: SquareProps) {
+export default function Square(props: Props) {
     let colorClass;
     switch (props.color) {
         case Color.Dark:

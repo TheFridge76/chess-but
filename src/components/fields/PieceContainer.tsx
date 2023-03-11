@@ -1,24 +1,24 @@
-import PieceSprite from "./PieceSprite";
-import Field from "./Field";
+import PieceSprite from "../core/PieceSprite";
+import Field from "../core/Field";
 import {useContext} from "react";
-import {StateContext} from "./Game";
-import {Side, Piece} from "../model/types";
-import {StateUpdater} from "../model/state";
-import {Draggable} from "./Draggable";
-import {doMove} from "../model/moves";
-import {MoveResult, ResultType} from "../model/results";
-import {GameRules} from "../model/rules";
+import {StateContext} from "../core/Game";
+import {Side, Piece} from "../../model/types";
+import {StateUpdater} from "../../model/state";
+import Draggable from "../utility/Draggable";
+import {doMove} from "../../model/moves";
+import {MoveResult, ResultType} from "../../model/results";
+import {GameRules} from "../../model/rules";
 
 function getKey(piece: Piece) {
     return `${piece.col}_${piece.row}`;
 }
 
-type BoardProps = {
+type Props = {
     updateState: StateUpdater,
     rules: GameRules,
 }
 
-function Board(props: BoardProps) {
+export default function PieceContainer(props: Props) {
     const state = useContext(StateContext);
 
     function isActive(color: Side) {
@@ -51,5 +51,3 @@ function Board(props: BoardProps) {
         </Field>
     );
 }
-
-export default Board;

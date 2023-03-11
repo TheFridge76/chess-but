@@ -1,15 +1,15 @@
 import {useEffect, useState} from "react";
-import TextField from "./TextField";
+import TextField from "../../utility/TextField";
 
-import styles from "../style/connection.module.css"
-import {webrtcConfig} from "../model/webrtc";
+import styles from "../../../style/connection.module.css"
+import {webrtcConfig} from "../../../model/webrtc";
 import ConnectionStringDisplay from "./ConnectionStringDisplay";
 
-type PeerConnectionProps = {
+type Props = {
     onDataChannel: (channel: RTCDataChannel) => void,
 }
 
-export default function PeerConnection(props: PeerConnectionProps) {
+export default function PeerConnection(props: Props) {
     const [state] = useState(() => {
         const connection = new RTCPeerConnection(webrtcConfig);
         return {

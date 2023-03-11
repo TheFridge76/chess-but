@@ -1,4 +1,4 @@
-import styles from "../style/connection.module.css";
+import styles from "../../../style/connection.module.css";
 
 type Props = {
     label: string,

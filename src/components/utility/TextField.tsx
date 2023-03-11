@@ -1,6 +1,6 @@
 import {useState} from "react";
 
-type TextFieldProps = {
+type Props = {
     name: string,
     label: string,
     value: string,
@@ -8,7 +8,7 @@ type TextFieldProps = {
     disabled?: boolean,
 }
 
-export default function TextField(props: TextFieldProps) {
+export default function TextField(props: Props) {
     const [value, setValue] = useState(props.value);
     const onEnter = props.onEnter;
 

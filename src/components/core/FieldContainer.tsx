@@ -1,16 +1,14 @@
-import styles from "../style/field.module.css"
+import styles from "../../style/field.module.css"
 import {ReactNode} from "react";
 
-type FieldContainerProps = {
+type Props = {
     children: ReactNode
 }
 
-function FieldContainer(props: FieldContainerProps) {
+export default function FieldContainer(props: Props) {
     return (
         <div className={styles.fieldContainer}>
             {props.children}
         </div>
     );
 }
-
-export default FieldContainer;

@@ -1,12 +1,12 @@
-import styles from "../style/promotion.module.css"
-import Field from "./Field";
-import {StateUpdater} from "../model/state";
-import PieceSprite from "./PieceSprite";
-import {Side, Square} from "../model/types";
-import Clickable from "./Clickable";
-import {ResultType} from "../model/results";
-import {GameRules} from "../model/rules";
-import {PieceType} from "../rules/library";
+import styles from "../../style/promotion.module.css"
+import Field from "../core/Field";
+import {StateUpdater} from "../../model/state";
+import PieceSprite from "../core/PieceSprite";
+import {Side, Square} from "../../model/types";
+import Clickable from "../utility/Clickable";
+import {ResultType} from "../../model/results";
+import {GameRules} from "../../model/rules";
+import {PieceType} from "../../rules/library";
 
 type Props = {
     updateState: StateUpdater,
@@ -15,7 +15,7 @@ type Props = {
     rules: GameRules,
 }
 
-function Promotion(props: Props) {
+export default function Promotion(props: Props) {
     return (
         <Field className={styles.background}>
             <h1 className={styles.header}>You got a promotion!</h1>
@@ -43,5 +43,3 @@ function Promotion(props: Props) {
         </Field>
     );
 }
-
-export default Promotion;
