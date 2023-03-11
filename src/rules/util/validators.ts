@@ -37,12 +37,12 @@ export const occupied: MoveCondition = (_from, to, state) => {
 
 export const occupiedOpponent: MoveCondition = (_from, to, state) => {
     const piece = pieceOnSquare(state, to);
-    return piece !== undefined && piece.color !== state.activeSide;
+    return piece !== undefined && piece.side !== state.activeSide;
 }
 
 export const occupiedAlly: MoveCondition = (_from, to, state) => {
     const piece = pieceOnSquare(state, to);
-    return piece !== undefined && piece.color === state.activeSide;
+    return piece !== undefined && piece.side === state.activeSide;
 }
 
 export const emptyPath: MoveCondition = (from, to, state) => {
@@ -71,7 +71,7 @@ export const emptyPath: MoveCondition = (from, to, state) => {
 
 export const activeSide: MoveCondition = (from, _to, state) => {
     const piece = pieceOnSquare(state, from);
-    return piece === undefined ? false : state.activeSide === piece.color;
+    return piece === undefined ? false : state.activeSide === piece.side;
 }
 
 // TODO Create function that returns an attackedSquare function for a given side
@@ -97,7 +97,7 @@ export const pieceAttacked: ((type: PieceType) => MoveCondition) = (type) => {
         //TODO Check all instances of this piece
 
         // Piece to be checked for attackedness
-        const attackedPiece = state.pieces.find((piece) => piece.pieceType === type && piece.color === state.activeSide);
+        const attackedPiece = state.pieces.find((piece) => piece.pieceType === type && piece.side === state.activeSide);
         if (attackedPiece === undefined) {
             return false;
         }

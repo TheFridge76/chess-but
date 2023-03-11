@@ -16,7 +16,7 @@ export const anarchy: RuleSet = {
             piece: StdPieceType.Bishop,
             stage: 0,
         }),
-        [AnaModifier.AutoBong]: changeSetup("rnbq1bnr/ppppkppp/8/4p3/4P3/8/PPPPKPPP/RNBQ1BNR"),
+        [AnaModifier.AutoBong]: changeSetup("rnbqkbnr/pppp2pp/8/3BppB1/8/8/PPPPPPPP/RN1QK1NR"),
         //TODO ana::pipi => Show warning after en passant denied
         //TODO ana::enableSiberianSwipe
         //TODO ana::enableKnightBoost

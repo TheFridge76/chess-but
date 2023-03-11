@@ -19,7 +19,8 @@ export type Skin = string;
 
 export type PieceStaticProps = {
     pieceType: PieceType,
-    color: Side,
+    side: Side,
+    renderColor: Side,
     renderAs: Skin,
     validators: MoveValidator[][],
 }
@@ -32,7 +33,8 @@ export type Piece = PieceStaticProps & PieceDynamicProps;
 export function clonePiece(piece: Piece): Piece {
     return {
         pieceType: piece.pieceType,
-        color: piece.color,
+        side: piece.side,
+        renderColor: piece.renderColor,
         renderAs: piece.renderAs,
         row: piece.row,
         col: piece.col,

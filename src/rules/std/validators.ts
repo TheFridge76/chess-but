@@ -227,6 +227,6 @@ export const Promotion: MoveValidator = (from, to, state) => {
     return virtualTo.row === 8 ? [{
         type: ResultType.Promotion,
         on: to,
-        side: piece.color,
+        side: piece.side,
     }] : [];
 }

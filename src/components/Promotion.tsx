@@ -27,15 +27,15 @@ function Promotion(props: Props) {
                         piece: {
                             row: props.square.row,
                             col: props.square.col,
-                            color: props.side,
+                            side: props.side,
+                            renderColor: props.side,
                             renderAs: properties.renderAs,
                             pieceType: type as PieceType,
                             validators: [...properties.validators],
                         }});
                 }}>
                     <PieceSprite
-                        color={props.side}
-                        pieceType={type as PieceType}
+                        renderColor={props.side}
                         renderAs={properties.renderAs}
                     />
                 </Clickable>

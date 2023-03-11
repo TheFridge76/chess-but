@@ -22,7 +22,7 @@ describe("parse piece", () => {
         ["N", Side.White],
     ])("gets side from short form %s", (id: string, side: Side) => {
         const piece = parsePiece(rules, id);
-        expect(piece?.color).toEqual(side);
+        expect(piece?.side).toEqual(side);
     });
     test("fails on invalid short form", () => {
         const id = "s";
@@ -42,7 +42,7 @@ describe("parse piece", () => {
         [`${StdPieceType.Horsey}_${Side.White}`, Side.White],
     ])("gets side from long form %s", (id: string, side: Side) => {
         const piece = parsePiece(rules, id);
-        expect(piece?.color).toEqual(side);
+        expect(piece?.side).toEqual(side);
     });
     test("fails on invalid long form", () => {
         const id = "popo";
@@ -55,7 +55,8 @@ describe("string to setup", () => {
     const pieceParser = (_pieceString: string) => {
         return {
             pieceType: StdPieceType.Horsey,
-            color: Side.White,
+            side: Side.White,
+            renderColor: Side.White,
             renderAs: "horsey",
             validators: [],
         };

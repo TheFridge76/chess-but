@@ -30,7 +30,7 @@ function Board(props: BoardProps) {
         <Field>
             {state.pieces.map((piece) => {
                 return <Draggable key={getKey(piece)}
-                                  active={isActive(piece.color)} row={piece.row} col={piece.col}
+                                  active={isActive(piece.side)} row={piece.row} col={piece.col}
                                   dropValidator={(from, to) => {
                                       const updates = doMove(from, to, state, piece.validators);
                                       const move = updates.find((update) => update.type === ResultType.Move) as MoveResult;
@@ -43,8 +43,7 @@ function Board(props: BoardProps) {
                                       }
                                   }}>
                     <PieceSprite
-                        color={piece.color}
-                        pieceType={piece.pieceType}
+                        renderColor={piece.renderColor}
                         renderAs={piece.renderAs}
                     />
                 </Draggable>

@@ -19,8 +19,9 @@ const parsePieceLong: ParsePieceFunction = (rules, pieceString) => {
     if (piece && rules.playableSides.includes(side as Side)) {
         return {
             pieceType: id as PieceType,
+            side: side as Side,
             renderAs: piece.renderAs,
-            color: side as Side,
+            renderColor: side as Side,
             validators: [...piece.validators],
         };
     } else {
@@ -35,8 +36,9 @@ const parsePieceShort: ParsePieceFunction = (rules, pieceString) => {
         const piece = rules.pieces[pieceType] as PieceRules;
         return {
             pieceType: pieceType,
+            side: side,
             renderAs: piece.renderAs,
-            color: side,
+            renderColor: side,
             validators: [...piece.validators],
         };
     }
