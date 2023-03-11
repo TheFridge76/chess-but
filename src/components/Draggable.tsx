@@ -1,5 +1,5 @@
 import styles from "../style/draggable.module.css"
-import React, {ReactNode, useContext, useEffect, useReducer} from "react";
+import React, {ReactNode, useContext, useEffect, useReducer, useRef} from "react";
 import {Square} from "../model/types";
 import {BoardContext} from "./Game";
 
@@ -36,11 +36,11 @@ function reducer(state: PieceState, action: {
     payload: {
         dropValidator: DropValidator,
         flipped: boolean,
+        size: number,
     },
 } | {
     type: "clear",
-    payload: {
-    },
+    payload: {},
 }) {
     switch (action.type) {
         case "drag":
@@ -65,8 +65,8 @@ function reducer(state: PieceState, action: {
                 row: state.square.row,
                 col: state.square.col,
             }
-            const squaresX = Math.round(offset.x / 80);
-            const squaresY = Math.round(offset.y / 80);
+            const squaresX = Math.round(offset.x / action.payload.size);
+            const squaresY = Math.round(offset.y / action.payload.size);
             const to = {
                 row: action.payload.flipped ? from.row + squaresY : from.row - squaresY,
                 col: action.payload.flipped ? from.col - squaresX : from.col + squaresX,
@@ -96,7 +96,7 @@ function reducer(state: PieceState, action: {
     }
 }
 
-type DraggableProps = {
+type Props = {
     children: ReactNode,
     active: boolean,
     row: number,
@@ -105,7 +105,8 @@ type DraggableProps = {
     onDrop: (from: Square, to: Square) => void,
 };
 
-export function Draggable(props: DraggableProps) {
+export function Draggable(props: Props) {
+    const ref = useRef<HTMLDivElement>(null);
     const boardState = useContext(BoardContext);
 
     const [state, dispatch] = useReducer(reducer, {
@@ -119,6 +120,8 @@ export function Draggable(props: DraggableProps) {
 
     useEffect(() => {
         if (state.dragging) {
+            const size = ref.current === null ? 0 : ref.current.getBoundingClientRect().width;
+
             const move = (e: MouseEvent) => {
                 e.preventDefault();
                 dispatch({type: "move", payload: {e: e}});
@@ -127,7 +130,13 @@ export function Draggable(props: DraggableProps) {
                 e.preventDefault();
                 touchToMouse(e, (e) => dispatch({type: "move", payload: {e: e}}));
             }
-            const drop = () => dispatch({type: "drop", payload: {dropValidator: dropValidator, flipped: boardState.flipped}});
+            const drop = () => dispatch({
+                type: "drop", payload: {
+                    dropValidator: dropValidator,
+                    flipped: boardState.flipped,
+                    size: size,
+                }
+            });
 
             window.addEventListener("mousemove", move);
             window.addEventListener("touchmove", moveTouch);
@@ -158,13 +167,18 @@ export function Draggable(props: DraggableProps) {
 
     return (
         <div
+            ref={ref}
             className={`${state.dragging ? styles.dragging : ""}`}
             onMouseDown={props.active
                 ? (e) => dispatch({type: "drag", payload: {e}})
-                : (e) => {e.preventDefault();}}
+                : (e) => {
+                    e.preventDefault();
+                }}
             onTouchStart={props.active
                 ? (e) => touchToMouse(e, (e) => dispatch({type: "drag", payload: {e}}))
-                : (e) => {e.preventDefault();}}
+                : (e) => {
+                    e.preventDefault();
+                }}
             style={style}
         >
             {props.children}
