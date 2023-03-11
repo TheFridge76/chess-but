@@ -7,8 +7,8 @@ import {HowDoesItMoveCondition, RookCondition} from "../std/validators";
 
 export const pieceCatalog: Record<AnaPieceType, PieceRules> = {
     [AnaPieceType.Knook]: {
-        validators: (side) => [[
-            activeSide(side),
+        validators: [[
+            activeSide,
             onField,
             negate(occupiedAlly),
             negate(pieceAttacked(StdPieceType.King)),

@@ -21,7 +21,7 @@ const parsePieceLong: ParsePieceFunction = (rules, pieceString) => {
             pieceType: id as PieceType,
             renderAs: piece.renderAs,
             color: side as Side,
-            validators: piece.validators(side as Side),
+            validators: [...piece.validators],
         };
     } else {
         return undefined;
@@ -37,7 +37,7 @@ const parsePieceShort: ParsePieceFunction = (rules, pieceString) => {
             pieceType: pieceType,
             renderAs: piece.renderAs,
             color: side,
-            validators: piece.validators(side),
+            validators: [...piece.validators],
         };
     }
     return undefined;

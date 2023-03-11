@@ -210,7 +210,11 @@ export const HolyHell: MoveValidator = (from, to, state) => {
     }];
 }
 
-export const Promotion: (side: Side) => MoveValidator = (side: Side) => (_from, to, state) => {
+export const Promotion: MoveValidator = (from, to, state) => {
+    const piece = pieceOnSquare(state, from);
+    if (piece === undefined) {
+        return [];
+    }
     let virtualTo;
     switch (state.activeSide) {
         case Side.White:
@@ -223,6 +227,6 @@ export const Promotion: (side: Side) => MoveValidator = (side: Side) => (_from, 
     return virtualTo.row === 8 ? [{
         type: ResultType.Promotion,
         on: to,
-        side: side,
+        side: piece.color,
     }] : [];
 }

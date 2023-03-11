@@ -30,7 +30,7 @@ function Promotion(props: Props) {
                             color: props.side,
                             renderAs: properties.renderAs,
                             pieceType: type as PieceType,
-                            validators: properties.validators(props.side)
+                            validators: [...properties.validators],
                         }});
                 }}>
                     <PieceSprite

@@ -5,7 +5,6 @@
 // resetHandlers(ResultType)?
 import {allPieces, allValidators, PieceType, ValidatorId} from "../rules/library";
 import {GameRules} from "./rules";
-import {Side} from "./types";
 
 export type RuleModifier = (rules: GameRules) => GameRules;
 type RuleModifierTemplate<T> = (val: T) => RuleModifier;
@@ -40,12 +39,7 @@ export const addValidator: RuleModifierTemplate<AddValidatorProps> = (props: Add
             return rules;
         }
         //TODO Put validator IDs into piece.validators so that this can be done better
-        const oldValidators = piece.validators;
-        piece.validators = (side: Side) => {
-            const validators = oldValidators(side);
-            validators[props.stage].unshift(entry[1]);
-            return validators;
-        };
+        piece.validators[props.stage].unshift(entry[1]);
         return rules;
     }
 };

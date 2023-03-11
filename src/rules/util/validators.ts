@@ -1,7 +1,6 @@
 import {Result, ResultType} from "../../model/results";
 import {doMove, MoveCondition, MoveValidator} from "../../model/moves";
 import {always} from "./modifiers";
-import {Side} from "../../model/types";
 import {pieceOnSquare, updateState} from "../../model/state";
 import {PieceType} from "../library";
 
@@ -70,10 +69,9 @@ export const emptyPath: MoveCondition = (from, to, state) => {
     return true;
 }
 
-export const activeSide = (side: Side): MoveCondition => {
-    return (_from, _to, state) => {
-        return state.activeSide === side;
-    };
+export const activeSide: MoveCondition = (from, _to, state) => {
+    const piece = pieceOnSquare(state, from);
+    return piece === undefined ? false : state.activeSide === piece.color;
 }
 
 // TODO Create function that returns an attackedSquare function for a given side
